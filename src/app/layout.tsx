@@ -7,6 +7,11 @@ import { ourFileRouter } from "@/app/api/uploadthing/core";
 export const metadata: Metadata = {
   title: "HorecaAI",
   description: "Slim bestellen voor uw restaurant",
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    viewportFit: 'cover',
+  },
 };
 
 export default function RootLayout({

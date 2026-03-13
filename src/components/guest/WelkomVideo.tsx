@@ -57,7 +57,7 @@ export default function WelkomVideo({ videoUrl, restaurantName, tableNumber, onC
   }
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-primary flex items-center justify-center">
+    <div className="relative w-full overflow-hidden bg-primary flex items-center justify-center" style={{ minHeight: '100dvh' }}>
       {/* Video background */}
       {videoUrl && (
         <video
@@ -105,7 +105,7 @@ export default function WelkomVideo({ videoUrl, restaurantName, tableNumber, onC
       </div>
 
       {/* Bottom glass card */}
-      <div className="absolute bottom-0 left-0 right-0 z-10 p-4">
+      <div className="absolute bottom-0 left-0 right-0 z-10 p-4" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
         <div className="backdrop-blur-xl bg-white/10 border border-white/10 rounded-xl p-4 flex items-center justify-between">
           {/* Table info */}
           <div className="flex items-center gap-3">

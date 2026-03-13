@@ -30,7 +30,7 @@ export default function GastFlow({
   tableNumber,
   categories,
 }: Props) {
-  const [step, setStep] = useState<Step>('video')
+  const [step, setStep] = useState<Step>(videoUrl ? 'video' : 'menu')
   const [videoWatchedSeconds, setVideoWatchedSeconds] = useState(0)
   const [upsellItems, setUpsellItems] = useState<MenuItem[]>([])
   const [upsellShown, setUpsellShown] = useState(false)
