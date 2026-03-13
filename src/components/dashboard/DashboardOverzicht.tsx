@@ -269,17 +269,12 @@ export default function DashboardOverzicht({
                         {formatEuro(day.totalCents)}
                       </div>
                       <div
-                        className="w-full rounded-t-lg transition-all duration-200"
-                        style={{
-                          height: `${Math.max(pct, 3)}%`,
-                          background: isToday ? '#003422' : '#e4e2df',
-                        }}
-                        onMouseEnter={(e) => {
-                          if (!isToday) e.currentTarget.style.background = '#c0c9c1'
-                        }}
-                        onMouseLeave={(e) => {
-                          if (!isToday) e.currentTarget.style.background = '#e4e2df'
-                        }}
+                        className={`w-full rounded-t-lg transition-all duration-200 ${
+                          isToday
+                            ? 'bg-primary'
+                            : 'bg-surface-container-highest group-hover/bar:bg-outline-variant'
+                        }`}
+                        style={{ height: `${Math.max(pct, 3)}%` }}
                       />
                     </div>
                     <span
@@ -432,10 +427,8 @@ export default function DashboardOverzicht({
                 {recenteOrders.map((order, i) => (
                   <tr
                     key={order.id}
-                    className="transition-colors"
+                    className="transition-colors hover:bg-[#faf8f5]"
                     style={{ borderTop: i > 0 ? '1px solid rgba(192,201,193,0.2)' : 'none' }}
-                    onMouseEnter={(e) => { e.currentTarget.style.background = '#faf8f5' }}
-                    onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}
                   >
                     <td className="px-6 py-5 font-bold text-sm text-on-surface font-mono">
                       #{order.id.slice(-6).toUpperCase()}
