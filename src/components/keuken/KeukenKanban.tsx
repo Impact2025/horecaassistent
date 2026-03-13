@@ -211,7 +211,7 @@ export default function KeukenKanban({
     return () => clearTimeout(timer)
   }, [orders])
 
-  const columnOrders = COLUMNS.map((col) =>
+  const columnOrders: OrderWithTable[][] = COLUMNS.map((col) =>
     orders.filter((o) => col.statuses.includes(o.status))
   )
 
@@ -247,7 +247,7 @@ export default function KeukenKanban({
       {/* Mobile: tab bar — Desktop: hidden */}
       <div className="md:hidden flex-none flex border-b border-[#1b1c1a]">
         {COLUMNS.map((col, i) => {
-          const count = columnOrders[i].length
+          const count = (columnOrders[i] ?? []).length
           const isActive = activeTab === i
           const accentColor = i === 0 ? '#ffb693' : i === 1 ? '#82bc9e' : '#6b7168'
           return (
@@ -272,16 +272,16 @@ export default function KeukenKanban({
 
       {/* Mobile: single active column */}
       <div className="md:hidden flex-1 bloomberg-grid overflow-y-auto p-4 flex flex-col gap-3">
-        {columnOrders[activeTab].map((order) => (
+        {(columnOrders[activeTab] ?? []).map((order) => (
           <OrderCard
             key={order.id}
             order={order}
-            column={COLUMNS[activeTab]}
+            column={COLUMNS[activeTab]!}
             onStatusUpdate={onStatusUpdate}
             isNew={newOrderIds.has(order.id)}
           />
         ))}
-        {columnOrders[activeTab].length === 0 && (
+        {(columnOrders[activeTab] ?? []).length === 0 && (
           <div className="text-center text-[#3d3f3c] text-sm mt-16">
             Geen bestellingen
           </div>
@@ -291,7 +291,7 @@ export default function KeukenKanban({
       {/* Desktop: 3-column kanban */}
       <div className="hidden md:grid flex-1 bloomberg-grid overflow-hidden grid-cols-3 gap-4 p-4">
         {COLUMNS.map((col, i) => {
-          const colOrders = columnOrders[i]
+          const colOrders = columnOrders[i] ?? []
           return (
             <div key={col.label} className="flex flex-col min-h-0">
               <div className="flex-none flex items-center gap-3 mb-4">
