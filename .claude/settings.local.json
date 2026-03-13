@@ -12,7 +12,10 @@
       "Bash(DATABASE_URL_UNPOOLED='postgresql://neondb_owner:npg_bRPH8k9dWZej@ep-red-surf-aluvcd0l.c-3.eu-central-1.aws.neon.tech/neondb?sslmode=require' npx drizzle-kit push --force 2>&1)",
       "Bash(DATABASE_URL_UNPOOLED='postgresql://neondb_owner:npg_bRPH8k9dWZej@ep-red-surf-aluvcd0l.c-3.eu-central-1.aws.neon.tech/neondb?sslmode=require' npx tsx scripts/reset-db.ts 2>&1)",
       "Bash(rm -rf drizzle/ && DATABASE_URL_UNPOOLED='postgresql://neondb_owner:npg_bRPH8k9dWZej@ep-red-surf-aluvcd0l.c-3.eu-central-1.aws.neon.tech/neondb?sslmode=require' npx drizzle-kit generate 2>&1)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(npx tsc:*)",
+      "Bash(node -e \"const s = require\\('/d/apps/horecaassistent/node_modules/stripe'\\); console.log\\(Object.keys\\(s.Stripe || s\\).filter\\(k=>k.includes\\('api'\\)\\)\\)\"  2>/dev/null || grep -r \"2025-\" /d/apps/horecaassistent/node_modules/stripe/types/lib/index.d.ts 2>/dev/null | head -3)",
+      "Bash(find /d/apps/horecaassistent/node_modules/stripe -name \"*.d.ts\" | head -5 && grep -l \"acacia\" /d/apps/horecaassistent/node_modules/stripe/types/*.d.ts 2>/dev/null | head -3)"
     ]
   }
 }
