@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
-import { addTafel, toggleTafelActive } from '@/app/dashboard/tafels/actions'
+import { addTafel, toggleTafelActive, regenerateQrCode } from '@/app/dashboard/tafels/actions'
 import type { Table } from '@/lib/db/schema'
 
 interface TafelsBeheerProps {
@@ -35,7 +35,9 @@ function Toggle({ checked, onChange, disabled }: { checked: boolean; onChange: (
 
 function TafelCard({ table, restaurantSlug, onPrint }: TafelCardProps) {
   const [active, setActive] = useState(table.isActive)
+  const [qrCodeUrl, setQrCodeUrl] = useState(table.qrCodeUrl)
   const [pending, startTransition] = useTransition()
+  const [qrPending, startQrTransition] = useTransition()
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? ''
   const tableUrl = `${appUrl}/${restaurantSlug}/tafel/${table.id}`
@@ -45,6 +47,13 @@ function TafelCard({ table, restaurantSlug, onPrint }: TafelCardProps) {
     setActive(next)
     startTransition(async () => {
       await toggleTafelActive(table.id, next)
+    })
+  }
+
+  function handleGenerateQr() {
+    startQrTransition(async () => {
+      const updated = await regenerateQrCode(table.id)
+      setQrCodeUrl(updated.qrCodeUrl)
     })
   }
 
@@ -72,57 +81,74 @@ function TafelCard({ table, restaurantSlug, onPrint }: TafelCardProps) {
 
       {/* QR code */}
       <div className="flex justify-center items-center py-6" style={{ background: '#faf8f5' }}>
-        {table.qrCodeUrl ? (
+        {qrCodeUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={table.qrCodeUrl}
+            src={qrCodeUrl}
             alt={`QR-code tafel ${table.tableNumber}`}
             className="w-28 h-28 rounded-xl"
           />
         ) : (
           <div
-            className="w-28 h-28 rounded-xl flex items-center justify-center"
+            className="w-28 h-28 rounded-xl flex flex-col items-center justify-center gap-2 cursor-pointer"
             style={{ background: '#efeeeb' }}
+            onClick={handleGenerateQr}
           >
-            <span className="material-symbols-outlined text-[40px] text-on-surface-variant/40">
+            <span className="material-symbols-outlined text-[32px] text-on-surface-variant/40">
               qr_code_2
+            </span>
+            <span className="text-[10px] font-semibold text-on-surface-variant/60">
+              {qrPending ? 'Genereren...' : 'Klik om te genereren'}
             </span>
           </div>
         )}
       </div>
 
       {/* Actions */}
-      <div className="flex gap-2 px-4 pb-4">
-        <button
-          onClick={() => onPrint(table)}
-          className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-full text-xs font-semibold transition-colors hover:brightness-95"
-          style={{ background: '#003422', color: '#fff' }}
-          title="QR-code afdrukken"
-        >
-          <span className="material-symbols-outlined text-[14px]">print</span>
-          Printen
-        </button>
-        {table.qrCodeUrl && (
-          <a
-            href={table.qrCodeUrl}
-            download={`qr-tafel-${table.tableNumber}.png`}
-            className="flex items-center justify-center w-9 h-9 rounded-full transition-colors hover:brightness-95 flex-none"
-            style={{ background: '#efeeeb', color: '#404943' }}
-            title="Downloaden"
+      <div className="flex flex-col gap-2 px-4 pb-4">
+        {qrCodeUrl ? (
+          <>
+            <button
+              onClick={() => onPrint({ ...table, qrCodeUrl })}
+              className="w-full flex items-center justify-center gap-2 py-2 rounded-full text-xs font-bold text-white transition-all hover:brightness-110"
+              style={{ background: '#003422' }}
+            >
+              <span className="material-symbols-outlined text-[15px]">print</span>
+              Printen
+            </button>
+            <div className="flex gap-2">
+              <a
+                href={qrCodeUrl}
+                download={`qr-tafel-${table.tableNumber}.png`}
+                className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-full text-[11px] font-semibold transition-colors hover:brightness-95"
+                style={{ background: '#efeeeb', color: '#404943' }}
+              >
+                <span className="material-symbols-outlined text-[13px]">download</span>
+                Download
+              </a>
+              <a
+                href={tableUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-full text-[11px] font-semibold transition-colors hover:brightness-95"
+                style={{ background: '#efeeeb', color: '#404943' }}
+              >
+                <span className="material-symbols-outlined text-[13px]">open_in_new</span>
+                Bekijk
+              </a>
+            </div>
+          </>
+        ) : (
+          <button
+            onClick={handleGenerateQr}
+            disabled={qrPending}
+            className="w-full flex items-center justify-center gap-2 py-2 rounded-full text-xs font-bold text-white transition-all hover:brightness-110 disabled:opacity-60"
+            style={{ background: '#003422' }}
           >
-            <span className="material-symbols-outlined text-[16px]">download</span>
-          </a>
+            <span className="material-symbols-outlined text-[15px]">qr_code</span>
+            {qrPending ? 'Genereren...' : 'QR-code genereren'}
+          </button>
         )}
-        <a
-          href={tableUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-center w-9 h-9 rounded-full transition-colors hover:brightness-95 flex-none"
-          style={{ background: '#efeeeb', color: '#404943' }}
-          title="Bekijken"
-        >
-          <span className="material-symbols-outlined text-[16px]">open_in_new</span>
-        </a>
       </div>
     </div>
   )

@@ -58,6 +58,32 @@ export async function addTafel(tableNumber: string): Promise<Table> {
   return updated
 }
 
+export async function regenerateQrCode(tableId: string): Promise<Table> {
+  const { restaurantId, restaurantSlug } = await getSession()
+
+  const table = await db.query.tables.findFirst({
+    where: and(eq(tables.id, tableId), eq(tables.restaurantId, restaurantId)),
+  })
+  if (!table) throw new Error('Tafel niet gevonden')
+
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? ''
+  const fullUrl = `${appUrl}/${restaurantSlug}/tafel/${table.id}`
+  const qrCodeUrl = await QRCode.toDataURL(fullUrl, {
+    width: 400,
+    margin: 2,
+    color: { dark: '#003422', light: '#fbf9f6' },
+  })
+
+  const [updated] = await db
+    .update(tables)
+    .set({ qrCodeUrl })
+    .where(eq(tables.id, tableId))
+    .returning()
+
+  if (!updated) throw new Error('QR-code opslaan mislukt')
+  return updated
+}
+
 export async function toggleTafelActive(
   tableId: string,
   isActive: boolean
