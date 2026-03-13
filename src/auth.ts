@@ -53,8 +53,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, user }) {
       if (user?.id) {
         token.userId = user.id
+      }
 
-        // Laad restaurant + rol van deze gebruiker
+      // Laad restaurant + rol als die (nog) ontbreekt in de token
+      if (token.userId && !token.restaurantId) {
         const [membership] = await db
           .select({
             restaurantId: restaurantMembers.restaurantId,
@@ -64,7 +66,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           })
           .from(restaurantMembers)
           .innerJoin(restaurants, eq(restaurantMembers.restaurantId, restaurants.id))
-          .where(eq(restaurantMembers.userId, user.id))
+          .where(eq(restaurantMembers.userId, token.userId as string))
           .limit(1)
 
         if (membership) {

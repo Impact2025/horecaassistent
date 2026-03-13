@@ -173,8 +173,8 @@ export default function TafelsBeheer({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
+      <div className="flex items-center justify-between gap-3">
+        <div className="min-w-0">
           <h1 className="font-heading text-2xl font-bold text-on-surface">
             Tafelbeheer
           </h1>
@@ -182,20 +182,21 @@ export default function TafelsBeheer({
             {tables.length} tafel{tables.length !== 1 ? 's' : ''} geconfigureerd
           </p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-2 flex-none">
           <button
             onClick={handlePrintAll}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl border border-outline-variant text-sm font-medium text-on-surface-variant hover:bg-surface-container transition-colors"
+            className="flex items-center gap-2 px-3 py-2 rounded-xl border border-outline-variant text-sm font-medium text-on-surface-variant hover:bg-surface-container transition-colors"
+            title="Alle QR-codes printen"
           >
             <span className="material-symbols-outlined text-[18px]">print</span>
-            Alle QR-codes printen
+            <span className="hidden sm:inline">Alle QR-codes printen</span>
           </button>
           <button
             onClick={() => setModalOpen(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-primary/90 transition-colors"
+            className="flex items-center gap-2 px-3 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-primary/90 transition-colors"
           >
             <span className="material-symbols-outlined text-[18px]">add</span>
-            Tafel toevoegen
+            <span className="hidden sm:inline">Tafel toevoegen</span>
           </button>
         </div>
       </div>

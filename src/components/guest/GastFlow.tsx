@@ -17,6 +17,7 @@ type Props = {
   restaurantName: string
   restaurantId: string
   tableId: string
+  tableNumber: string
   restaurantSlug: string
   categories: CategoryWithItems[]
 }
@@ -26,6 +27,7 @@ export default function GastFlow({
   restaurantName,
   restaurantId,
   tableId,
+  tableNumber,
   restaurantSlug,
   categories,
 }: Props) {
@@ -141,7 +143,7 @@ export default function GastFlow({
       <WelkomVideo
         videoUrl={videoUrl}
         restaurantName={restaurantName}
-        tableNumber={tableId}
+        tableNumber={tableNumber}
         onComplete={handleVideoComplete}
       />
     )

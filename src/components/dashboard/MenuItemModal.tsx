@@ -2,8 +2,10 @@
 
 import { useState } from 'react'
 import { z } from 'zod'
-import { upsertMenuItem, upsertCategory, menuItemFormSchema } from '@/app/dashboard/menu/actions'
-import type { MenuItemFormData } from '@/app/dashboard/menu/actions'
+import { useUploadThing } from '@/lib/uploadthing'
+import { upsertMenuItem, upsertCategory } from '@/app/dashboard/menu/actions'
+import { menuItemFormSchema } from '@/app/dashboard/menu/schema'
+import type { MenuItemFormData } from '@/app/dashboard/menu/schema'
 import type { MenuItem, MenuCategory } from '@/lib/db/schema'
 
 const ALLERGEN_LIST = [
@@ -44,6 +46,9 @@ export default function MenuItemModal({
   const [showNewCategory, setShowNewCategory] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [saving, setSaving] = useState(false)
+  const [uploading, setUploading] = useState(false)
+
+  const { startUpload } = useUploadThing('menuItemImage')
 
   function toggleAllergen(a: string) {
     setAllergens((prev) =>
@@ -365,27 +370,74 @@ export default function MenuItemModal({
             </div>
           </div>
 
-          {/* Image URL */}
+          {/* Image upload */}
           <div>
-            <label className="block text-sm font-medium text-on-surface mb-1">
-              Afbeelding URL
+            <label className="block text-sm font-medium text-on-surface mb-2">
+              Afbeelding
             </label>
-            <input
-              type="url"
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-outline-variant bg-white text-on-surface text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
-              placeholder="https://..."
-            />
-            {imageUrl && (
-              <div className="mt-2 w-20 h-20 rounded-lg overflow-hidden border border-outline-variant">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={imageUrl}
-                  alt="Preview"
-                  className="w-full h-full object-cover"
+            <div className="flex items-start gap-4">
+              {imageUrl && (
+                <div className="relative w-20 h-20 rounded-xl overflow-hidden border border-outline-variant flex-shrink-0">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={imageUrl}
+                    alt="Preview"
+                    className="w-full h-full object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setImageUrl('')}
+                    className="absolute top-1 right-1 w-5 h-5 bg-black/60 rounded-full flex items-center justify-center hover:bg-black/80 transition-colors"
+                  >
+                    <span className="material-symbols-outlined text-white text-[14px]">
+                      close
+                    </span>
+                  </button>
+                </div>
+              )}
+              <label
+                className={`flex flex-col items-center justify-center gap-1 w-20 h-20 rounded-xl border-2 border-dashed cursor-pointer transition-colors ${
+                  uploading
+                    ? 'border-primary/40 bg-primary/5 cursor-wait'
+                    : 'border-outline-variant hover:border-primary hover:bg-primary/5'
+                }`}
+              >
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="sr-only"
+                  disabled={uploading}
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0]
+                    if (!file) return
+                    setUploading(true)
+                    try {
+                      const res = await startUpload([file])
+                      if (res?.[0]?.url) setImageUrl(res[0].url)
+                    } catch {
+                      setErrors((prev) => ({ ...prev, imageUrl: 'Upload mislukt' }))
+                    } finally {
+                      setUploading(false)
+                      e.target.value = ''
+                    }
+                  }}
                 />
-              </div>
+                {uploading ? (
+                  <span className="material-symbols-outlined text-primary text-[20px] animate-spin">
+                    progress_activity
+                  </span>
+                ) : (
+                  <span className="material-symbols-outlined text-on-surface-variant text-[20px]">
+                    add_photo_alternate
+                  </span>
+                )}
+                <span className="text-[10px] text-on-surface-variant text-center leading-tight">
+                  {uploading ? 'Uploaden...' : 'Foto uploaden'}
+                </span>
+              </label>
+            </div>
+            {errors.imageUrl && (
+              <p className="text-xs text-red-500 mt-1">{errors.imageUrl}</p>
             )}
           </div>
 
@@ -520,7 +572,7 @@ export default function MenuItemModal({
             </button>
             <button
               type="submit"
-              disabled={saving}
+              disabled={saving || uploading}
               className="flex-1 py-3 rounded-xl bg-primary text-white text-sm font-semibold hover:bg-primary/90 transition-colors disabled:opacity-60"
             >
               {saving ? 'Opslaan...' : 'Opslaan'}

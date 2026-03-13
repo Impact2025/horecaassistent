@@ -195,6 +195,7 @@ export default function KeukenKanban({
   onStatusUpdate,
 }: KeukenKanbanProps) {
   const [newOrderIds, setNewOrderIds] = useState<Set<string>>(new Set())
+  const [activeTab, setActiveTab] = useState(0)
 
   useEffect(() => {
     const latestId = orders[0]?.id
@@ -210,9 +211,12 @@ export default function KeukenKanban({
     return () => clearTimeout(timer)
   }, [orders])
 
+  const columnOrders = COLUMNS.map((col) =>
+    orders.filter((o) => col.statuses.includes(o.status))
+  )
+
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-[#0a0c0b]">
-      {/* Bloomberg-style radial dot background */}
       <style>{`
         .bloomberg-grid {
           background-image: radial-gradient(circle, #2a2c29 1px, transparent 1px);
@@ -225,14 +229,14 @@ export default function KeukenKanban({
       `}</style>
 
       {/* Header */}
-      <header className="flex-none backdrop-blur-md bg-[#0a0c0b]/80 border-b border-[#1b1c1a] px-6 py-4 flex items-center justify-between z-10">
-        <div className="flex items-center gap-4">
-          <h1 className="font-heading text-xl font-bold text-[#e2e4e1]">
+      <header className="flex-none backdrop-blur-md bg-[#0a0c0b]/80 border-b border-[#1b1c1a] px-4 py-3 flex items-center justify-between z-10">
+        <div className="flex items-center gap-3">
+          <h1 className="font-heading text-base font-bold text-[#e2e4e1]">
             HorecaAI
           </h1>
-          <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-[#1b1c1a] border border-[#82bc9e]/30">
-            <span className="w-2 h-2 rounded-full bg-[#82bc9e] animate-pulse" />
-            <span className="text-xs text-[#82bc9e] font-medium tracking-wide">
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#1b1c1a] border border-[#82bc9e]/30">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#82bc9e] animate-pulse" />
+            <span className="text-[11px] text-[#82bc9e] font-medium tracking-wide">
               Live Kitchen
             </span>
           </div>
@@ -240,15 +244,56 @@ export default function KeukenKanban({
         <LiveClock />
       </header>
 
-      {/* Kanban columns */}
-      <div className="flex-1 bloomberg-grid overflow-hidden grid grid-cols-3 gap-4 p-4">
-        {COLUMNS.map((col) => {
-          const colOrders = orders.filter((o) =>
-            col.statuses.includes(o.status)
+      {/* Mobile: tab bar — Desktop: hidden */}
+      <div className="md:hidden flex-none flex border-b border-[#1b1c1a]">
+        {COLUMNS.map((col, i) => {
+          const count = columnOrders[i].length
+          const isActive = activeTab === i
+          const accentColor = i === 0 ? '#ffb693' : i === 1 ? '#82bc9e' : '#6b7168'
+          return (
+            <button
+              key={col.label}
+              onClick={() => setActiveTab(i)}
+              className="flex-1 flex flex-col items-center gap-0.5 py-3 relative transition-colors"
+              style={{ color: isActive ? accentColor : '#6b7168' }}
+            >
+              <span className="text-sm font-semibold leading-none">{col.label}</span>
+              <span className="text-xs font-bold tabular-nums">{count}</span>
+              {isActive && (
+                <span
+                  className="absolute bottom-0 left-2 right-2 h-0.5 rounded-full"
+                  style={{ background: accentColor }}
+                />
+              )}
+            </button>
           )
+        })}
+      </div>
+
+      {/* Mobile: single active column */}
+      <div className="md:hidden flex-1 bloomberg-grid overflow-y-auto p-4 flex flex-col gap-3">
+        {columnOrders[activeTab].map((order) => (
+          <OrderCard
+            key={order.id}
+            order={order}
+            column={COLUMNS[activeTab]}
+            onStatusUpdate={onStatusUpdate}
+            isNew={newOrderIds.has(order.id)}
+          />
+        ))}
+        {columnOrders[activeTab].length === 0 && (
+          <div className="text-center text-[#3d3f3c] text-sm mt-16">
+            Geen bestellingen
+          </div>
+        )}
+      </div>
+
+      {/* Desktop: 3-column kanban */}
+      <div className="hidden md:grid flex-1 bloomberg-grid overflow-hidden grid-cols-3 gap-4 p-4">
+        {COLUMNS.map((col, i) => {
+          const colOrders = columnOrders[i]
           return (
             <div key={col.label} className="flex flex-col min-h-0">
-              {/* Column header */}
               <div className="flex-none flex items-center gap-3 mb-4">
                 <h2 className="text-3xl font-light text-[#e2e4e1]">
                   {col.label}
@@ -256,23 +301,13 @@ export default function KeukenKanban({
                 <span
                   className="text-2xl font-bold"
                   style={{
-                    color:
-                      col.label === 'Nieuw'
-                        ? '#ffb693'
-                        : col.label === 'In bereiding'
-                        ? '#82bc9e'
-                        : '#6b7168',
+                    color: i === 0 ? '#ffb693' : i === 1 ? '#82bc9e' : '#6b7168',
                   }}
                 >
                   {colOrders.length}
                 </span>
-                {/* Gradient line */}
-                <div
-                  className={`flex-1 h-px bg-gradient-to-r ${col.gradientClass}`}
-                />
+                <div className={`flex-1 h-px bg-gradient-to-r ${col.gradientClass}`} />
               </div>
-
-              {/* Scrollable order list */}
               <div className="flex-1 overflow-y-auto flex flex-col gap-3 pr-1">
                 {colOrders.map((order) => (
                   <OrderCard

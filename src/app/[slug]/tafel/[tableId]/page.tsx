@@ -28,10 +28,10 @@ export default async function TafelPage({ params }: PageProps) {
     notFound()
   }
 
-  // Load table
+  // Load table by tableNumber (used in QR codes)
   const table = await db.query.tables.findFirst({
     where: and(
-      eq(tables.id, tableId),
+      eq(tables.tableNumber, tableId),
       eq(tables.restaurantId, restaurant.id)
     ),
   })
@@ -89,6 +89,7 @@ export default async function TafelPage({ params }: PageProps) {
       restaurantName={restaurant.name}
       restaurantId={restaurant.id}
       tableId={table.id}
+      tableNumber={table.tableNumber}
       restaurantSlug={slug}
       categories={categories}
     />

@@ -20,17 +20,22 @@ export default function VariantSheet({ item, onAdd, onClose }: Props) {
   const [note, setNote] = useState('')
   const [qty, setQty] = useState(1)
 
-  const totalVariantOffset = Object.entries(selectedOptions).reduce((sum, [groupName, optionName]) => {
-    const group = item.variants.find((v) => v.group === groupName)
-    const option = group?.options.find((o) => o.name === optionName)
-    return sum + (option?.priceOffsetCents ?? 0)
-  }, 0) + Object.entries(selectedMulti).reduce((sum, [groupName, optionNames]) => {
-    const group = item.variants.find((v) => v.group === groupName)
-    return sum + optionNames.reduce((s, name) => {
-      const option = group?.options.find((o) => o.name === name)
-      return s + (option?.priceOffsetCents ?? 0)
+  const totalVariantOffset =
+    Object.entries(selectedOptions).reduce((sum, [groupName, optionName]) => {
+      const group = item.variants.find((v) => v.group === groupName)
+      const option = group?.options.find((o) => o.name === optionName)
+      return sum + (option?.priceOffsetCents ?? 0)
+    }, 0) +
+    Object.entries(selectedMulti).reduce((sum, [groupName, optionNames]) => {
+      const group = item.variants.find((v) => v.group === groupName)
+      return (
+        sum +
+        optionNames.reduce((s, name) => {
+          const option = group?.options.find((o) => o.name === name)
+          return s + (option?.priceOffsetCents ?? 0)
+        }, 0)
+      )
     }, 0)
-  }, 0)
 
   const unitPriceCents = item.priceCents + totalVariantOffset
 
@@ -55,7 +60,6 @@ export default function VariantSheet({ item, onAdd, onClose }: Props) {
       note: note.trim() || undefined,
       isUpsell: false,
     })
-    onClose()
   }
 
   const toggleMulti = (group: string, optionName: string) => {
@@ -72,154 +76,278 @@ export default function VariantSheet({ item, onAdd, onClose }: Props) {
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
+        className="fixed inset-0 z-[60] bg-on-surface/25 backdrop-blur-sm"
         onClick={onClose}
       />
 
       {/* Sheet */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#fbf9f6] rounded-t-2xl max-h-[90vh] overflow-y-auto animate-slide-up">
-        {/* Close button */}
-        <div className="sticky top-0 bg-[#fbf9f6] z-10 flex items-center justify-between px-5 pt-4 pb-2">
-          <div className="w-10 h-1 rounded-full bg-outline-variant mx-auto absolute left-1/2 -translate-x-1/2 top-2" />
-          <div className="w-8" />
-          <h2 className="font-heading font-bold text-on-surface text-lg">{item.name}</h2>
-          <button
-            onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center rounded-full bg-surface-container hover:bg-surface-container-high transition-colors"
-          >
-            <span className="material-symbols-outlined text-on-surface-variant text-xl">close</span>
-          </button>
-        </div>
+      <div className="fixed bottom-0 left-0 right-0 z-[70] h-[88vh] bg-[#fbf9f6] rounded-t-[2rem] overflow-hidden flex flex-col shadow-2xl animate-slide-up">
+        {/* Handle */}
+        <div className="absolute top-3 left-1/2 -translate-x-1/2 w-10 h-1 bg-surface-container-highest rounded-full z-10" />
 
-        {/* Item image */}
-        {item.imageUrl ? (
-          <div className="mx-5 rounded-xl overflow-hidden aspect-video mb-4">
-            <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
-          </div>
-        ) : (
-          <div className="mx-5 rounded-xl aspect-video bg-surface-container mb-4 flex items-center justify-center">
-            <span className="material-symbols-outlined text-on-surface-variant text-5xl">restaurant</span>
-          </div>
-        )}
-
-        <div className="px-5 pb-8 space-y-6">
-          {/* Price */}
-          <div className="flex items-center justify-between">
-            <p className="text-on-surface-variant text-sm font-body">{item.description}</p>
-            <p className="font-heading font-bold text-on-surface text-xl ml-4">
-              {formatPrice(unitPriceCents)}
-            </p>
-          </div>
-
-          {/* Variant groups */}
-          {item.variants.map((group) => (
-            <div key={group.group}>
-              <div className="flex items-center gap-2 mb-3">
-                <h3 className="font-heading font-semibold text-on-surface text-base">{group.group}</h3>
-                {group.required && (
-                  <span className="text-xs bg-secondary-container text-primary rounded-full px-2 py-0.5 font-label">
-                    Verplicht
-                  </span>
-                )}
+        {/* Scrollable content */}
+        <div className="overflow-y-auto hide-scrollbar flex-grow pb-28">
+          {/* Hero image */}
+          <div className="relative h-[38vh] w-full overflow-hidden">
+            {item.imageUrl ? (
+              <img
+                src={item.imageUrl}
+                alt={item.name}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full bg-surface-container flex items-center justify-center">
+                <span
+                  className="material-symbols-outlined text-on-surface-variant/30"
+                  style={{ fontSize: 64 }}
+                >
+                  restaurant
+                </span>
               </div>
+            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#fbf9f6] via-[#fbf9f6]/20 to-transparent" />
+          </div>
 
-              <div className="space-y-2">
-                {group.options.map((option) => {
-                  const isSelected = group.multiSelect
-                    ? (selectedMulti[group.group] ?? []).includes(option.name)
-                    : selectedOptions[group.group] === option.name
+          {/* Name + description overlapping the gradient */}
+          <div className="px-6 -mt-10 relative z-10">
+            <h2 className="font-heading text-3xl font-extrabold leading-none tracking-tight text-on-surface">
+              {item.name}
+            </h2>
+            {item.description && (
+              <p className="mt-2.5 text-on-surface-variant font-sans text-sm leading-relaxed">
+                {item.description}
+              </p>
+            )}
 
-                  return (
-                    <button
-                      key={option.name}
-                      onClick={() => {
-                        if (group.multiSelect) {
-                          toggleMulti(group.group, option.name)
-                        } else {
-                          setSelectedOptions((prev) => ({ ...prev, [group.group]: option.name }))
-                        }
-                      }}
-                      className={`w-full flex items-center justify-between p-3.5 rounded-xl border transition-all ${
-                        isSelected
-                          ? 'border-primary bg-secondary-container'
-                          : 'border-outline-variant bg-surface-container-low hover:bg-surface-container'
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div
-                          className={`w-5 h-5 flex-shrink-0 flex items-center justify-center transition-all ${
-                            group.multiSelect
-                              ? `rounded border-2 ${isSelected ? 'border-primary bg-primary' : 'border-outline-variant'}`
-                              : `rounded-full border-2 ${isSelected ? 'border-primary' : 'border-outline-variant'}`
+            {/* Allergen pills */}
+            {item.allergens.length > 0 && (
+              <div className="flex gap-1.5 mt-3 flex-wrap">
+                {item.allergens.map((a) => (
+                  <span
+                    key={a}
+                    className="px-2.5 py-1 bg-surface-container rounded-full text-[10px] font-bold text-on-surface-variant border border-outline-variant/30"
+                  >
+                    {a}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Variants */}
+          <div className="px-6 mt-7 space-y-7">
+            {item.variants.map((group) => (
+              <section key={group.group}>
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-heading text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">
+                    {group.group}
+                  </h3>
+                  {group.required && (
+                    <span className="text-[10px] text-tertiary font-bold uppercase tracking-wide">
+                      Verplicht
+                    </span>
+                  )}
+                </div>
+
+                {/* Single-select: horizontal chips for ≤3 options, grid for more */}
+                {!group.multiSelect && group.options.length <= 3 ? (
+                  <div className="flex gap-2">
+                    {group.options.map((option) => {
+                      const isSelected = selectedOptions[group.group] === option.name
+                      return (
+                        <button
+                          key={option.name}
+                          onClick={() =>
+                            setSelectedOptions((prev) => ({
+                              ...prev,
+                              [group.group]: option.name,
+                            }))
+                          }
+                          className={`flex-1 py-3.5 rounded-xl text-center font-heading font-bold text-sm transition-all ${
+                            isSelected
+                              ? 'bg-primary text-white ring-2 ring-primary ring-offset-2'
+                              : 'bg-surface-container text-on-surface-variant hover:bg-surface-container-high'
                           }`}
                         >
-                          {isSelected && (
-                            group.multiSelect ? (
-                              <span className="material-symbols-outlined text-white text-xs">check</span>
-                            ) : (
-                              <div className="w-2.5 h-2.5 rounded-full bg-primary" />
-                            )
+                          <span>{option.name}</span>
+                          {option.priceOffsetCents !== 0 && (
+                            <span className="block text-[10px] font-normal mt-0.5 opacity-80">
+                              {option.priceOffsetCents > 0 ? '+' : ''}
+                              {formatPrice(option.priceOffsetCents)}
+                            </span>
                           )}
+                        </button>
+                      )
+                    })}
+                  </div>
+                ) : !group.multiSelect ? (
+                  /* Grid for single-select with >3 options */
+                  <div className="grid grid-cols-2 gap-2">
+                    {group.options.map((option) => {
+                      const isSelected = selectedOptions[group.group] === option.name
+                      return (
+                        <button
+                          key={option.name}
+                          onClick={() =>
+                            setSelectedOptions((prev) => ({
+                              ...prev,
+                              [group.group]: option.name,
+                            }))
+                          }
+                          className={`py-3.5 px-4 rounded-xl text-left flex justify-between items-center transition-all ${
+                            isSelected
+                              ? 'bg-primary text-white ring-2 ring-primary ring-offset-1'
+                              : 'bg-surface-container text-on-surface hover:bg-surface-container-high'
+                          }`}
+                        >
+                          <span className="font-heading font-semibold text-sm">{option.name}</span>
+                          <div className="flex items-center gap-1.5">
+                            {option.priceOffsetCents !== 0 && (
+                              <span className="text-[10px] opacity-70">
+                                {option.priceOffsetCents > 0 ? '+' : ''}
+                                {formatPrice(option.priceOffsetCents)}
+                              </span>
+                            )}
+                            {isSelected && (
+                              <span
+                                className="material-symbols-outlined text-white"
+                                style={{
+                                  fontSize: 16,
+                                  fontVariationSettings:
+                                    "'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 20",
+                                }}
+                              >
+                                check_circle
+                              </span>
+                            )}
+                          </div>
+                        </button>
+                      )
+                    })}
+                  </div>
+                ) : (
+                  /* Multi-select: list rows */
+                  <div className="space-y-2">
+                    {group.options.map((option) => {
+                      const isSelected = (selectedMulti[group.group] ?? []).includes(option.name)
+                      return (
+                        <div
+                          key={option.name}
+                          className="flex items-center justify-between p-4 bg-surface-container-low rounded-xl border border-outline-variant/20"
+                        >
+                          <div>
+                            <span className="font-heading font-bold text-sm text-on-surface">
+                              {option.name}
+                            </span>
+                            {option.priceOffsetCents !== 0 && (
+                              <p className="text-[11px] text-on-surface-variant mt-0.5">
+                                {option.priceOffsetCents > 0 ? '+' : ''}
+                                {formatPrice(option.priceOffsetCents)}
+                              </p>
+                            )}
+                          </div>
+                          <button
+                            onClick={() => toggleMulti(group.group, option.name)}
+                            className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-all ${
+                              isSelected
+                                ? 'bg-primary border-primary'
+                                : 'border-outline-variant bg-surface-container-low'
+                            }`}
+                          >
+                            {isSelected && (
+                              <span
+                                className="material-symbols-outlined text-white"
+                                style={{ fontSize: 14 }}
+                              >
+                                check
+                              </span>
+                            )}
+                          </button>
                         </div>
-                        <span className="font-body text-on-surface text-sm">{option.name}</span>
-                      </div>
-                      {option.priceOffsetCents !== 0 && (
-                        <span className="font-body text-on-surface-variant text-sm">
-                          {option.priceOffsetCents > 0 ? '+' : ''}
-                          {formatPrice(option.priceOffsetCents)}
-                        </span>
-                      )}
-                    </button>
-                  )
-                })}
+                      )
+                    })}
+                  </div>
+                )}
+              </section>
+            ))}
+
+            {/* Note */}
+            <section>
+              <h3 className="font-heading text-[11px] font-bold uppercase tracking-widest text-on-surface-variant mb-3">
+                Opmerking{' '}
+                <span className="font-sans font-normal normal-case tracking-normal text-on-surface-variant/60">
+                  (optioneel)
+                </span>
+              </h3>
+              <textarea
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                placeholder="Bijv. geen ui, allergie voor noten..."
+                rows={3}
+                className="w-full rounded-xl border border-outline-variant/40 bg-surface-container-low p-3.5 font-sans text-on-surface text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary placeholder:text-on-surface-variant/40"
+              />
+            </section>
+
+            {/* Quantity */}
+            <section className="flex items-center justify-between">
+              <h3 className="font-heading text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">
+                Aantal
+              </h3>
+              <div className="flex items-center gap-4 bg-surface-container rounded-full px-2 py-1">
+                <button
+                  onClick={() => setQty(Math.max(1, qty - 1))}
+                  className="w-9 h-9 rounded-full bg-surface-container-highest flex items-center justify-center hover:bg-surface-container-high transition-colors"
+                >
+                  <span className="material-symbols-outlined text-on-surface" style={{ fontSize: 20 }}>
+                    remove
+                  </span>
+                </button>
+                <span className="font-heading font-bold text-on-surface text-lg w-6 text-center">
+                  {qty}
+                </span>
+                <button
+                  onClick={() => setQty(qty + 1)}
+                  className="w-9 h-9 rounded-full bg-primary flex items-center justify-center hover:bg-primary/90 transition-colors"
+                >
+                  <span className="material-symbols-outlined text-white" style={{ fontSize: 20 }}>
+                    add
+                  </span>
+                </button>
               </div>
-            </div>
-          ))}
-
-          {/* Note */}
-          <div>
-            <label className="font-heading font-semibold text-on-surface text-base block mb-2">
-              Opmerking
-              <span className="font-body font-normal text-on-surface-variant text-sm ml-2">(optioneel)</span>
-            </label>
-            <textarea
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              placeholder="Bijv. geen ui, allergie voor noten..."
-              rows={3}
-              className="w-full rounded-xl border border-outline-variant bg-surface-container-low p-3 font-body text-on-surface text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary placeholder:text-on-surface-variant/50"
-            />
+            </section>
           </div>
+        </div>
 
-          {/* Quantity selector */}
-          <div className="flex items-center justify-between">
-            <span className="font-heading font-semibold text-on-surface text-base">Aantal</span>
-            <div className="flex items-center gap-4 bg-surface-container rounded-full px-2 py-1">
-              <button
-                onClick={() => setQty(Math.max(1, qty - 1))}
-                className="w-9 h-9 rounded-full bg-surface-container-highest flex items-center justify-center hover:bg-surface-container-high transition-colors"
-              >
-                <span className="material-symbols-outlined text-on-surface text-xl">remove</span>
-              </button>
-              <span className="font-heading font-bold text-on-surface text-lg w-6 text-center">{qty}</span>
-              <button
-                onClick={() => setQty(qty + 1)}
-                className="w-9 h-9 rounded-full bg-primary flex items-center justify-center hover:bg-primary/90 transition-colors"
-              >
-                <span className="material-symbols-outlined text-white text-xl">add</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Add button */}
+        {/* Sticky CTA */}
+        <div
+          className="absolute bottom-0 left-0 right-0 p-5 border-t border-outline-variant/10"
+          style={{
+            background: 'rgba(251,249,246,0.92)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+          }}
+        >
           <button
             onClick={handleAdd}
             disabled={!allRequiredSelected}
-            className="w-full bg-primary disabled:bg-surface-container-highest disabled:text-on-surface-variant text-white font-heading font-semibold rounded-full py-4 text-base transition-all active:scale-[0.98] disabled:cursor-not-allowed"
+            className="w-full py-[1.1rem] rounded-2xl font-heading font-extrabold text-base shadow-lg transition-all active:scale-[0.97] flex items-center justify-center gap-3 disabled:bg-surface-container-highest disabled:text-on-surface-variant disabled:shadow-none bg-tertiary text-white hover:brightness-110 disabled:cursor-not-allowed"
           >
-            {allRequiredSelected
-              ? `Voeg toe — ${formatPrice(unitPriceCents * qty)}`
-              : 'Maak een keuze'}
+            {allRequiredSelected ? (
+              <>
+                <span>Toevoegen — {formatPrice(unitPriceCents * qty)}</span>
+                <span
+                  className="material-symbols-outlined text-white"
+                  style={{
+                    fontSize: 20,
+                    fontVariationSettings: "'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24",
+                  }}
+                >
+                  shopping_cart
+                </span>
+              </>
+            ) : (
+              'Maak een keuze'
+            )}
           </button>
         </div>
       </div>
@@ -232,6 +360,8 @@ export default function VariantSheet({ item, onAdd, onClose }: Props) {
         .animate-slide-up {
           animation: slide-up 0.3s cubic-bezier(0.32, 0.72, 0, 1);
         }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
     </>
   )

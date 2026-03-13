@@ -14,8 +14,20 @@ export default function WelkomVideo({ videoUrl, restaurantName, tableNumber, onC
   const startTimeRef = useRef<number>(Date.now())
   const [showSkip, setShowSkip] = useState(false)
   const [skipCountdown, setSkipCountdown] = useState(3)
+  const [isMuted, setIsMuted] = useState(false)
 
   useEffect(() => {
+    // Probeer met geluid te spelen; val terug op muted als browser het blokkeert
+    const video = videoRef.current
+    if (video) {
+      video.muted = false
+      video.play().catch(() => {
+        video.muted = true
+        setIsMuted(true)
+        video.play().catch(() => null)
+      })
+    }
+
     const timer = setTimeout(() => setShowSkip(true), 3000)
     const countdown = setInterval(() => {
       setSkipCountdown((prev) => {
@@ -51,13 +63,26 @@ export default function WelkomVideo({ videoUrl, restaurantName, tableNumber, onC
         <video
           ref={videoRef}
           autoPlay
-          muted
+          muted={isMuted}
           playsInline
           onEnded={handleComplete}
           className="absolute inset-0 w-full h-full object-cover"
         >
           <source src={videoUrl} type="video/mp4" />
         </video>
+      )}
+
+      {/* Mute toggle */}
+      {videoUrl && (
+        <button
+          onClick={() => setIsMuted((prev) => !prev)}
+          className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-black/40 backdrop-blur flex items-center justify-center"
+          aria-label={isMuted ? 'Geluid aanzetten' : 'Geluid uitzetten'}
+        >
+          <span className="material-symbols-outlined text-white text-xl">
+            {isMuted ? 'volume_off' : 'volume_up'}
+          </span>
+        </button>
       )}
 
       {/* Gradient overlay */}

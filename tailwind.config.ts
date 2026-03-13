@@ -46,6 +46,7 @@ const config: Config = {
       fontFamily: {
         sans: ["Inter", "sans-serif"],
         heading: ["Manrope", "sans-serif"],
+        serif: ["Cormorant Garamond", "Georgia", "serif"],
       },
     },
   },

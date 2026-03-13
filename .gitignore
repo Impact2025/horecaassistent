@@ -39,3 +39,11 @@ next-env.d.ts
 
 # drizzle
 drizzle/
+
+# large media files
+public/*.mp4
+public/*.mov
+public/*.avi
+
+# claude local settings
+.claude/settings.local.json

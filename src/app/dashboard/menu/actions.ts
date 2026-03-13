@@ -5,7 +5,7 @@ import { db } from '@/lib/db'
 import { menuItems, menuCategories } from '@/lib/db/schema'
 import { eq, and } from 'drizzle-orm'
 import { redirect } from 'next/navigation'
-import { z } from 'zod'
+import { menuItemFormSchema, type MenuItemFormData } from './schema'
 
 async function getRestaurantId(): Promise<string> {
   const session = await auth()
@@ -22,38 +22,9 @@ export async function updateItemAvailability(
   await db
     .update(menuItems)
     .set({ isAvailable, updatedAt: new Date() })
-    .where(
-      and(eq(menuItems.id, itemId), eq(menuItems.restaurantId, restaurantId))
-    )
+    .where(and(eq(menuItems.id, itemId), eq(menuItems.restaurantId, restaurantId)))
     .returning()
 }
-
-const variantOptionSchema = z.object({
-  name: z.string().min(1),
-  priceOffsetCents: z.number().int().min(0),
-})
-
-const variantGroupSchema = z.object({
-  group: z.string().min(1),
-  required: z.boolean(),
-  multiSelect: z.boolean(),
-  options: z.array(variantOptionSchema),
-})
-
-export const menuItemFormSchema = z.object({
-  id: z.string().uuid().optional(),
-  name: z.string().min(1, 'Naam is verplicht'),
-  description: z.string().optional(),
-  categoryId: z.string().uuid().optional(),
-  priceCents: z.number().int().positive('Prijs is verplicht'),
-  vatRate: z.enum(['0.09', '0.21', '0.00']),
-  allergens: z.array(z.string()),
-  isAvailable: z.boolean(),
-  variants: z.array(variantGroupSchema),
-  imageUrl: z.string().url().optional().or(z.literal('')),
-})
-
-export type MenuItemFormData = z.infer<typeof menuItemFormSchema>
 
 export async function upsertMenuItem(
   data: MenuItemFormData

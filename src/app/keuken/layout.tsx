@@ -15,10 +15,8 @@ export default async function KeukenLayout({
   }
 
   return (
-    <html lang="nl" className="dark">
-      <body className="bg-[#0a0c0b] text-[#e2e4e1] min-h-screen">
-        {children}
-      </body>
-    </html>
+    <div className="bg-[#0a0c0b] text-[#e2e4e1] min-h-screen">
+      {children}
+    </div>
   )
 }

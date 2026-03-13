@@ -28,7 +28,13 @@ const orderSchema = z.object({
 })
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
-  const body = await request.json()
+  let body: unknown
+  try {
+    body = await request.json()
+  } catch {
+    return NextResponse.json({ error: 'Ongeldig JSON verzoek' }, { status: 400 })
+  }
+
   const parsed = orderSchema.safeParse(body)
 
   if (!parsed.success) {
@@ -93,23 +99,29 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const cancelUrl = `${appUrl}/${restaurant.slug}/tafel/${tableId}`
 
   // Create MultiSafepay betaling
-  const mspResponse = await createMspOrder({
-    type: 'redirect',
-    order_id: newOrder.id,
-    currency: 'EUR',
-    amount: totalCents,
-    description: `Bestelling ${newOrder.id.slice(0, 8).toUpperCase()}`,
-    payment_options: {
-      notification_url: `${appUrl}/api/webhooks/multisafepay`,
-      redirect_url: bevestigingUrl,
-      cancel_url: cancelUrl,
-      close_window: false,
-    },
-    ...(guestEmail ? { customer: { email: guestEmail } } : {}),
-  })
+  let mspResponse
+  try {
+    mspResponse = await createMspOrder({
+      type: 'redirect',
+      order_id: newOrder.id,
+      currency: 'EUR',
+      amount: totalCents,
+      description: `Bestelling ${newOrder.id.slice(0, 8).toUpperCase()}`,
+      payment_options: {
+        notification_url: `${appUrl}/api/webhooks/multisafepay`,
+        redirect_url: bevestigingUrl,
+        cancel_url: cancelUrl,
+        close_window: false,
+      },
+      ...(guestEmail ? { customer: { email: guestEmail } } : {}),
+    })
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Betaling aanmaken mislukt'
+    return NextResponse.json({ error: message }, { status: 502 })
+  }
 
   if (!mspResponse.success) {
-    return NextResponse.json({ error: 'Betaling aanmaken mislukt' }, { status: 500 })
+    return NextResponse.json({ error: 'Betaling aanmaken mislukt' }, { status: 502 })
   }
 
   // Store MSP order reference
@@ -119,14 +131,18 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     .where(eq(orders.id, newOrder.id))
     .returning()
 
-  // Notify kitchen via Pusher
-  await pusherServer.trigger(`restaurant-${restaurantId}`, 'new-order', {
-    orderId: newOrder.id,
-    tableId,
-    itemCount: items.reduce((sum, i) => sum + i.qty, 0),
-    totalCents,
-    createdAt: newOrder.createdAt,
-  })
+  // Notify kitchen via Pusher (non-critical — don't fail the order if this throws)
+  try {
+    await pusherServer.trigger(`restaurant-${restaurantId}`, 'new-order', {
+      orderId: newOrder.id,
+      tableId,
+      itemCount: items.reduce((sum, i) => sum + i.qty, 0),
+      totalCents,
+      createdAt: newOrder.createdAt,
+    })
+  } catch {
+    // Pusher failure is non-critical; order + payment already succeeded
+  }
 
   return NextResponse.json({
     orderId: newOrder.id,

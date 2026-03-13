@@ -55,18 +55,22 @@ export async function PATCH(
     return NextResponse.json({ error: 'Order not found' }, { status: 404 })
   }
 
-  await Promise.all([
-    pusherServer.trigger(
-      `restaurant-${restaurantId}`,
-      'order-status-update',
-      { orderId, status: newStatus }
-    ),
-    pusherServer.trigger(
-      `order-${orderId}`,
-      'order-status-update',
-      { orderId, status: newStatus }
-    ),
-  ])
+  try {
+    await Promise.all([
+      pusherServer.trigger(
+        `restaurant-${restaurantId}`,
+        'order-status-update',
+        { orderId, status: newStatus }
+      ),
+      pusherServer.trigger(
+        `order-${orderId}`,
+        'order-status-update',
+        { orderId, status: newStatus }
+      ),
+    ])
+  } catch {
+    // Pusher failure doesn't block the response — DB update already succeeded
+  }
 
   return NextResponse.json(updatedOrder)
 }

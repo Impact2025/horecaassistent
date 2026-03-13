@@ -232,9 +232,10 @@ export default function MenuBeheer({
             Beheer categorieën en menu-items
           </p>
         </div>
+        {/* Desktop: text button */}
         <button
           onClick={() => openAddItem()}
-          className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-primary/90 transition-colors"
+          className="hidden sm:flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-primary/90 transition-colors"
         >
           <span className="material-symbols-outlined text-[18px]">add</span>
           Item toevoegen
@@ -286,6 +287,16 @@ export default function MenuBeheer({
           </div>
         )}
       </div>
+
+      {/* FAB (mobile only) */}
+      <button
+        onClick={() => openAddItem()}
+        className="sm:hidden fixed bottom-20 right-4 z-20 flex items-center gap-2 pl-4 pr-5 py-3.5 bg-primary text-white rounded-2xl shadow-lg text-sm font-semibold active:scale-95 transition-transform"
+        style={{ bottom: 'calc(64px + env(safe-area-inset-bottom))' }}
+      >
+        <span className="material-symbols-outlined text-[20px]">add</span>
+        Item toevoegen
+      </button>
 
       {/* Modal */}
       {modalOpen && (
