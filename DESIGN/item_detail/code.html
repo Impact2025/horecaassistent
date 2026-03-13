@@ -1,247 +1,211 @@
 <!DOCTYPE html>
-
-<html lang="en"><head>
+<html lang="nl">
+<head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "background": "#fbf9f6",
-                        "secondary-fixed": "#d6e7db",
-                        "surface-container": "#efeeeb",
-                        "on-secondary-fixed-variant": "#3b4a42",
-                        "inverse-on-surface": "#f2f0ed",
-                        "secondary-container": "#d6e7db",
-                        "on-surface-variant": "#404943",
-                        "on-background": "#1b1c1a",
-                        "outline-variant": "#c0c9c1",
-                        "surface": "#fbf9f6",
-                        "surface-bright": "#fbf9f6",
-                        "on-primary-fixed": "#002114",
-                        "on-surface": "#1b1c1a",
-                        "on-tertiary-fixed": "#351000",
-                        "primary-container": "#0f4c35",
-                        "on-error": "#ffffff",
-                        "on-secondary": "#ffffff",
-                        "surface-dim": "#dbdad7",
-                        "inverse-surface": "#30312f",
-                        "surface-container-highest": "#e4e2df",
-                        "tertiary-fixed-dim": "#ffb693",
-                        "primary-fixed-dim": "#99d3b4",
-                        "inverse-primary": "#99d3b4",
-                        "secondary": "#536259",
-                        "surface-variant": "#e4e2df",
-                        "on-primary": "#ffffff",
-                        "on-tertiary-fixed-variant": "#7a3000",
-                        "error-container": "#ffdad6",
-                        "on-secondary-fixed": "#111e17",
-                        "primary-fixed": "#b4f0d0",
-                        "primary": "#003422",
-                        "outline": "#707973",
-                        "error": "#ba1a1a",
-                        "on-primary-fixed-variant": "#155039",
-                        "secondary-fixed-dim": "#bacabf",
-                        "on-tertiary": "#ffffff",
-                        "surface-container-high": "#eae8e5",
-                        "tertiary": "#501d00",
-                        "surface-container-lowest": "#ffffff",
-                        "tertiary-fixed": "#ffdbcc",
-                        "on-secondary-container": "#59685f",
-                        "on-error-container": "#93000a",
-                        "on-tertiary-container": "#ff935c",
-                        "surface-container-low": "#f5f3f0",
-                        "tertiary-container": "#732d00",
-                        "on-primary-container": "#82bc9e",
-                        "surface-tint": "#316950"
-                    },
-                    fontFamily: {
-                        "headline": ["Manrope"],
-                        "body": ["Inter"],
-                        "label": ["Inter"]
-                    },
-                    borderRadius: {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "1.5rem",
-                        "full": "9999px"
-                    },
-                },
-            },
-        }
-    </script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          "background": "#fbf9f6",
+          "surface": "#fbf9f6",
+          "surface-container-lowest": "#ffffff",
+          "surface-container-low": "#f5f3f0",
+          "surface-container": "#efeeeb",
+          "surface-container-high": "#eae8e5",
+          "surface-container-highest": "#e4e2df",
+          "on-surface": "#1b1c1a", "on-surface-variant": "#404943",
+          "outline": "#707973", "outline-variant": "#c0c9c1",
+          "primary": "#003422", "on-primary": "#ffffff",
+          "primary-container": "#0f4c35",
+          "primary-fixed": "#b4f0d0", "primary-fixed-dim": "#99d3b4",
+          "on-primary-fixed": "#002114",
+          "on-primary-container": "#b4f0d0",
+          "secondary-container": "#d6e7db",
+          "on-secondary-fixed-variant": "#3b4a42",
+          "tertiary": "#501d00", "on-tertiary": "#ffffff",
+          "tertiary-fixed": "#ffdbcc",
+        },
+        fontFamily: {
+          "headline": ["Manrope", "sans-serif"],
+          "body": ["Inter", "sans-serif"],
+          "label": ["Inter", "sans-serif"],
+        },
+        borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "1rem", "2xl": "1.5rem", "full": "9999px" },
+      },
+    },
+  }
+</script>
 <style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-            font-size: 24px;
-        }
-        .hide-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .glass-nav {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(20px);
-        }
-    </style>
-<style>
-    body {
-      min-height: max(884px, 100dvh);
-    }
-  </style>
-  </head>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; font-size: 24px; }
+  body { background: #fbf9f6; color: #1b1c1a; -webkit-font-smoothing: antialiased; }
+  .hide-scrollbar::-webkit-scrollbar { display: none; }
+  .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  .glass { background: rgba(251,249,246,0.88); backdrop-filter: blur(20px); }
+</style>
+<style>body { min-height: max(884px, 100dvh); }</style>
+</head>
 <body class="bg-surface font-body text-on-surface antialiased min-h-screen flex flex-col">
-<!-- Top App Bar (Shared Component Strategy) -->
-<header class="sticky top-0 z-50 glass-nav h-16 flex items-center justify-between px-6">
-<div class="flex items-center gap-4">
-<span class="material-symbols-outlined text-primary-container" data-icon="qr_code_scanner">qr_code_scanner</span>
-<h1 class="font-headline font-bold text-lg tracking-tight">TafelAI</h1>
-</div>
-<div class="flex items-center">
-<span class="material-symbols-outlined text-primary-container" data-icon="shopping_bag">shopping_bag</span>
-</div>
+
+<!-- Blurred menu behind -->
+<header class="sticky top-0 z-50 glass h-14 flex items-center justify-between px-5 border-b border-outline-variant/20">
+  <button class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center">
+    <span class="material-symbols-outlined text-on-surface" style="font-size:16px;">arrow_back_ios_new</span>
+  </button>
+  <h1 class="font-headline font-bold text-base tracking-tight text-on-surface">Item detail</h1>
+  <span class="material-symbols-outlined text-primary-container" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">shopping_bag</span>
 </header>
-<!-- Background Content (Simulating the Menu underneath) -->
-<main class="flex-grow px-6 py-8 overflow-hidden opacity-40">
-<div class="space-y-10">
-<div>
-<span class="font-label text-xs uppercase tracking-widest text-on-surface-variant font-semibold">Selection</span>
-<h2 class="font-headline text-4xl font-extrabold mt-2">Signature Coffee</h2>
-</div>
-<div class="grid grid-cols-1 gap-6">
-<div class="bg-surface-container-low p-6 rounded-xl flex justify-between items-center">
-<div>
-<h3 class="font-headline text-xl font-bold">Oat Milk Latte</h3>
-<p class="text-on-surface-variant text-sm mt-1">Double shot espresso, creamy oat milk.</p>
-</div>
-<div class="w-20 h-20 bg-surface-container-highest rounded-xl"></div>
-</div>
-<div class="bg-surface-container-low p-6 rounded-xl flex justify-between items-center">
-<div>
-<h3 class="font-headline text-xl font-bold">Flat White</h3>
-<p class="text-on-surface-variant text-sm mt-1">Rich ristretto with micro-foam.</p>
-</div>
-<div class="w-20 h-20 bg-surface-container-highest rounded-xl"></div>
-</div>
-</div>
-</div>
+
+<main class="flex-grow overflow-hidden opacity-30 pointer-events-none px-5 py-6">
+  <div class="space-y-6">
+    <div>
+      <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">Selectie</p>
+      <h2 class="font-headline text-3xl font-extrabold mt-1">Signature Koffie</h2>
+    </div>
+    <div class="bg-surface-container-low p-5 rounded-xl flex justify-between items-center">
+      <div>
+        <h3 class="font-headline text-lg font-bold">Oat Milk Latte</h3>
+        <p class="text-on-surface-variant text-sm mt-0.5">Dubbel espresso, romige haver.</p>
+      </div>
+    </div>
+  </div>
 </main>
-<!-- Dim Backdrop Overlay -->
-<div class="fixed inset-0 bg-on-background/30 z-[60] backdrop-blur-sm"></div>
-<!-- Variant Sheet (Bottom Sheet 80%) -->
-<div class="fixed bottom-0 left-0 right-0 z-[70] h-[85vh] bg-surface rounded-t-[2.5rem] overflow-hidden flex flex-col shadow-2xl">
-<!-- Handlebar -->
-<div class="absolute top-4 left-1/2 -translate-x-1/2 w-12 h-1.5 bg-surface-container-highest rounded-full z-10"></div>
-<!-- Content Area -->
-<div class="overflow-y-auto hide-scrollbar flex-grow pb-32">
-<!-- Hero Image -->
-<div class="relative h-[40vh] w-full overflow-hidden">
-<img alt="Artisanal Oat Milk Latte with intricate foam art" class="w-full h-full object-cover" data-alt="Artisanal Oat Milk Latte with intricate foam art" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5JIcYzkL80KrHqKHY5aDNHsnqgGC67bw4tvh_uyBWU2qOwBWe7gbVt5hXtS_RK8mv4McI3Fxdm3p4D7Zy4Lw4-AMNV2LkptCMpg0NUmxg1QBV3LY7KFJ0Ycb1xtSlmHnf-EfQNWtRtHkV6XLVpeGetT6utsLK3vfO4ZIFey0m87pkhaCqd-PA_1v1X9sFHNrAeVHfrK-G2X7tXX0wcaYLZRKDOzdwgleSXJZ_vkljA_sHjIdc82RuL2KdErLJ5eUmJOSjc1koMnU"/>
-<div class="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent"></div>
+
+<!-- Dim backdrop -->
+<div class="fixed inset-0 bg-on-surface/25 z-[60] backdrop-blur-sm"></div>
+
+<!-- Bottom Sheet -->
+<div class="fixed bottom-0 left-0 right-0 z-[70] h-[88vh] bg-surface rounded-t-[2rem] overflow-hidden flex flex-col shadow-2xl">
+  <!-- Handle -->
+  <div class="absolute top-3 left-1/2 -translate-x-1/2 w-10 h-1 bg-surface-container-highest rounded-full z-10"></div>
+
+  <!-- Scrollable content -->
+  <div class="overflow-y-auto hide-scrollbar flex-grow pb-28">
+    <!-- Hero Image -->
+    <div class="relative h-[38vh] w-full overflow-hidden">
+      <img alt="Oat Milk Latte" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5JIcYzkL80KrHqKHY5aDNHsnqgGC67bw4tvh_uyBWU2qOwBWe7gbVt5hXtS_RK8mv4McI3Fxdm3p4D7Zy4Lw4-AMNV2LkptCMpg0NUmxg1QBV3LY7KFJ0Ycb1xtSlmHnf-EfQNWtRtHkV6XLVpeGetT6utsLK3vfO4ZIFey0m87pkhaCqd-PA_1v1X9sFHNrAeVHfrK-G2X7tXX0wcaYLZRKDOzdwgleSXJZ_vkljA_sHjIdc82RuL2KdErLJ5eUmJOSjc1koMnU"/>
+      <div class="absolute inset-0 bg-gradient-to-t from-surface via-surface/20 to-transparent"></div>
+    </div>
+
+    <!-- Info -->
+    <div class="px-6 -mt-10 relative z-10">
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-secondary-container rounded-full mb-3">
+        <span class="material-symbols-outlined text-primary" style="font-size:13px;font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 20;">auto_awesome</span>
+        <span class="font-label text-[10px] font-bold text-on-secondary-fixed-variant italic uppercase tracking-wide">Chef's Aanbeveling</span>
+      </span>
+      <h2 class="font-headline text-3xl font-extrabold leading-none tracking-tight">Oat Milk Latte</h2>
+      <p class="mt-3 text-on-surface-variant font-body text-sm leading-relaxed">
+        Een zachte, fluweelachtige blend van onze signature forest-geroosterde espresso bonen en premium, romige haverzuivel. Geserveerd op de perfecte temperatuur.
+      </p>
+
+      <!-- Allergens -->
+      <div class="flex gap-2 mt-3 flex-wrap">
+        <span class="px-2.5 py-1 bg-surface-container rounded-full text-[10px] font-bold text-on-surface-variant border border-outline-variant/30">Gluten</span>
+        <span class="px-2.5 py-1 bg-surface-container rounded-full text-[10px] font-bold text-on-surface-variant border border-outline-variant/30">Melk</span>
+        <span class="px-2.5 py-1 bg-surface-container rounded-full text-[10px] font-bold text-on-surface-variant border border-outline-variant/30">Soja</span>
+      </div>
+    </div>
+
+    <!-- Variants -->
+    <div class="px-6 mt-7 space-y-7">
+
+      <!-- Size -->
+      <section>
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-headline text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">Grootte</h3>
+          <span class="text-[10px] text-error font-bold uppercase tracking-wide">Verplicht</span>
+        </div>
+        <div class="flex gap-2">
+          <button class="flex-1 py-3.5 rounded-xl text-center font-headline font-bold text-sm bg-primary text-white ring-2 ring-primary ring-offset-2 transition-all">
+            Small
+          </button>
+          <button class="flex-1 py-3.5 rounded-xl text-center font-headline font-bold text-sm bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all">
+            Regular
+          </button>
+          <button class="flex-1 py-3.5 rounded-xl text-center font-headline font-bold text-sm bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all">
+            Large
+          </button>
+        </div>
+      </section>
+
+      <!-- Milk -->
+      <section>
+        <h3 class="font-headline text-[11px] font-bold uppercase tracking-widest text-on-surface-variant mb-3">Melkkeuze</h3>
+        <div class="grid grid-cols-2 gap-2">
+          <button class="py-3.5 px-4 rounded-xl bg-surface-container text-on-surface text-left flex justify-between items-center hover:bg-surface-container-high transition-all">
+            <span class="font-headline font-semibold text-sm">Volle melk</span>
+          </button>
+          <button class="py-3.5 px-4 rounded-xl bg-primary text-white text-left flex justify-between items-center ring-2 ring-primary ring-offset-1">
+            <span class="font-headline font-semibold text-sm">Haverzuivel</span>
+            <span class="material-symbols-outlined text-white" style="font-size:16px;font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 20;">check_circle</span>
+          </button>
+          <button class="py-3.5 px-4 rounded-xl bg-surface-container text-on-surface text-left flex justify-between items-center hover:bg-surface-container-high transition-all">
+            <span class="font-headline font-semibold text-sm">Soja</span>
+          </button>
+          <button class="py-3.5 px-4 rounded-xl bg-surface-container text-on-surface text-left flex justify-between items-center hover:bg-surface-container-high transition-all">
+            <span class="font-headline font-semibold text-sm">Amandel</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Extras -->
+      <section>
+        <h3 class="font-headline text-[11px] font-bold uppercase tracking-widest text-on-surface-variant mb-3">Extra's</h3>
+        <div class="space-y-2">
+          <div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl border border-outline-variant/20">
+            <div>
+              <span class="font-headline font-bold text-sm">Extra shot</span>
+              <p class="text-[11px] text-on-surface-variant mt-0.5">Extra cafeïne, meer smaak</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-[11px] text-on-surface-variant font-medium">+€0,80</span>
+              <div class="flex items-center gap-2">
+                <button class="w-7 h-7 rounded-full border border-outline-variant flex items-center justify-center hover:bg-surface-container transition-colors">
+                  <span class="material-symbols-outlined" style="font-size:13px;">remove</span>
+                </button>
+                <span class="font-headline font-bold text-sm w-4 text-center">1</span>
+                <button class="w-7 h-7 rounded-full bg-primary flex items-center justify-center">
+                  <span class="material-symbols-outlined text-white" style="font-size:13px;font-variation-settings:'FILL' 1,'wght' 600,'GRAD' 0,'opsz' 20;">add</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl border border-outline-variant/20">
+            <div>
+              <span class="font-headline font-bold text-sm">Siroop</span>
+              <p class="text-[11px] text-on-surface-variant mt-0.5">Vanille, karamel of hazelnoot</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-[11px] text-on-surface-variant font-medium">+€0,60</span>
+              <div class="flex items-center gap-2">
+                <button class="w-7 h-7 rounded-full border border-outline-variant flex items-center justify-center opacity-40">
+                  <span class="material-symbols-outlined" style="font-size:13px;">remove</span>
+                </button>
+                <span class="font-headline font-bold text-sm w-4 text-center text-on-surface-variant/40">0</span>
+                <button class="w-7 h-7 rounded-full bg-surface-container flex items-center justify-center hover:bg-surface-container-high border border-outline-variant/40 transition-colors">
+                  <span class="material-symbols-outlined" style="font-size:13px;">add</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Sticky CTA -->
+  <div class="absolute bottom-0 left-0 right-0 p-5 glass border-t border-outline-variant/10">
+    <button class="w-full py-4.5 rounded-2xl font-headline font-extrabold text-base shadow-lg transition-all active:scale-[0.97] flex items-center justify-center gap-3 bg-tertiary text-on-tertiary hover:brightness-110" style="padding-top:1.1rem;padding-bottom:1.1rem;">
+      <span>Toevoegen aan bestelling — €4,60</span>
+      <span class="material-symbols-outlined" style="font-size:20px;font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">shopping_cart</span>
+    </button>
+  </div>
 </div>
-<!-- Header Info -->
-<div class="px-8 -mt-12 relative z-10">
-<div class="bg-secondary-container inline-flex items-center px-4 py-1.5 rounded-full mb-4">
-<span class="font-label text-xs font-bold text-on-secondary-fixed-variant italic">Chef's Recommendation</span>
-</div>
-<h2 class="font-headline text-4xl font-extrabold leading-none tracking-tight">Oat Milk Latte</h2>
-<p class="mt-4 text-on-surface-variant font-body text-lg leading-relaxed">
-                    A smooth, velvety blend of our signature forest-roasted espresso beans and premium, creamy oat milk. Served at the perfect temperature to preserve the natural sweetness.
-                </p>
-</div>
-<!-- Variant Selectors -->
-<div class="px-8 mt-10 space-y-10">
-<!-- Size Selection -->
-<section>
-<h3 class="font-headline text-sm font-bold uppercase tracking-widest text-on-surface-variant mb-4">Select Size</h3>
-<div class="flex gap-3">
-<button class="flex-1 py-4 px-2 rounded-full bg-primary-container text-on-primary-container font-headline font-bold text-center">
-                            Small
-                        </button>
-<button class="flex-1 py-4 px-2 rounded-full bg-surface-container-low text-on-surface-variant font-headline font-bold text-center">
-                            Regular
-                        </button>
-<button class="flex-1 py-4 px-2 rounded-full bg-surface-container-low text-on-surface-variant font-headline font-bold text-center">
-                            Large
-                        </button>
-</div>
-</section>
-<!-- Milk Selection -->
-<section>
-<h3 class="font-headline text-sm font-bold uppercase tracking-widest text-on-surface-variant mb-4">Milk Choice</h3>
-<div class="grid grid-cols-2 gap-3">
-<button class="py-4 px-6 rounded-full bg-surface-container-low text-on-surface border-2 border-transparent text-left flex justify-between items-center group">
-<span class="font-headline font-semibold">Full Cream</span>
-<span class="material-symbols-outlined text-primary opacity-0" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-</button>
-<button class="py-4 px-6 rounded-full bg-primary-container text-primary-fixed border-2 border-transparent text-left flex justify-between items-center group">
-<span class="font-headline font-semibold">Oat Milk</span>
-<span class="material-symbols-outlined text-primary-fixed" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-</button>
-<button class="py-4 px-6 rounded-full bg-surface-container-low text-on-surface border-2 border-transparent text-left flex justify-between items-center group">
-<span class="font-headline font-semibold">Soy Milk</span>
-<span class="material-symbols-outlined text-primary opacity-0" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-</button>
-<button class="py-4 px-6 rounded-full bg-surface-container-low text-on-surface border-2 border-transparent text-left flex justify-between items-center group">
-<span class="font-headline font-semibold">Almond</span>
-<span class="material-symbols-outlined text-primary opacity-0" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-</button>
-</div>
-</section>
-<!-- Customizations -->
-<section>
-<h3 class="font-headline text-sm font-bold uppercase tracking-widest text-on-surface-variant mb-4">Additions</h3>
-<div class="space-y-3">
-<div class="flex items-center justify-between p-5 bg-surface-container-low rounded-xl">
-<span class="font-headline font-bold">Extra Shot</span>
-<div class="flex items-center gap-4">
-<span class="text-on-surface-variant font-label text-sm">+€0.80</span>
-<div class="flex items-center gap-3">
-<button class="w-8 h-8 rounded-full border border-outline-variant flex items-center justify-center">
-<span class="material-symbols-outlined text-sm" data-icon="remove">remove</span>
-</button>
-<span class="font-headline font-bold">1</span>
-<button class="w-8 h-8 rounded-full bg-primary-container text-white flex items-center justify-center">
-<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
-</button>
-</div>
-</div>
-</div>
-</div>
-</section>
-</div>
-</div>
-<!-- Sticky Footer Action -->
-<div class="absolute bottom-0 left-0 right-0 p-8 glass-nav">
-<button class="w-full py-5 rounded-full bg-tertiary text-on-tertiary font-headline font-extrabold text-xl shadow-lg transition-transform active:scale-[0.97] flex items-center justify-center gap-3">
-<span>Add to order — €3.80</span>
-<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
-</button>
-</div>
-</div>
-<!-- Bottom Nav Bar (Shared Component Strategy - Hidden for linear detail flow but defined here as per hierarchy) -->
-<!-- Exclusion Protocol: Hidden for linear process focus on detail sheet -->
-<footer class="hidden fixed bottom-0 left-0 right-0 h-20 bg-surface-container-lowest glass-nav border-t border-outline-variant/10 flex justify-around items-center px-4">
-<div class="flex flex-col items-center gap-1 text-primary-container">
-<span class="material-symbols-outlined" data-icon="restaurant_menu" style="font-variation-settings: 'FILL' 1;">restaurant_menu</span>
-<span class="text-[10px] font-label font-bold uppercase tracking-widest">Menu</span>
-</div>
-<div class="flex flex-col items-center gap-1 text-on-surface-variant/60">
-<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
-<span class="text-[10px] font-label font-bold uppercase tracking-widest">Orders</span>
-</div>
-<div class="flex flex-col items-center gap-1 text-on-surface-variant/60">
-<span class="material-symbols-outlined" data-icon="qr_code_2">qr_code_2</span>
-<span class="text-[10px] font-label font-bold uppercase tracking-widest">Scan</span>
-</div>
-<div class="flex flex-col items-center gap-1 text-on-surface-variant/60">
-<span class="material-symbols-outlined" data-icon="person">person</span>
-<span class="text-[10px] font-label font-bold uppercase tracking-widest">Profile</span>
-</div>
-</footer>
-</body></html>
+
+</body>
+</html>

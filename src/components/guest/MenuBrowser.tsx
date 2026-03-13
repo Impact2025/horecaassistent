@@ -30,10 +30,7 @@ function QuickAddButton({ onClick }: { onClick: (e: React.MouseEvent) => void })
     >
       <span
         className="material-symbols-outlined text-white"
-        style={{
-          fontSize: 18,
-          fontVariationSettings: "'FILL' 1,'wght' 600,'GRAD' 0,'opsz' 20",
-        }}
+        style={{ fontSize: 18, fontVariationSettings: "'FILL' 1,'wght' 600,'GRAD' 0,'opsz' 20" }}
       >
         add
       </span>
@@ -56,23 +53,14 @@ function MenuCard({
 
   const handleQuickAdd = (e: React.MouseEvent) => {
     e.stopPropagation()
-    if (hasVariants) {
-      onOpen()
-    } else {
-      onQuickAdd()
-    }
+    hasVariants ? onOpen() : onQuickAdd()
   }
 
   return (
     <div className={`card flex flex-col gap-2.5 cursor-pointer ${offsetClass}`} onClick={onOpen}>
       <div className="aspect-[3/4] overflow-hidden rounded-2xl bg-surface-container-low relative">
         {item.imageUrl ? (
-          <Image
-            src={item.imageUrl}
-            alt={item.name}
-            fill
-            className="card-img object-cover"
-          />
+          <Image src={item.imageUrl} alt={item.name} fill className="card-img object-cover" />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-surface-container">
             <span
@@ -120,13 +108,9 @@ export default function MenuBrowser({
 
   const scrollToCategory = (id: string) => {
     setActiveCategory(id)
-    const el = document.getElementById(`cat-${id}`)
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
+    document.getElementById(`cat-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
-  // Quick-add for items without variants
   const handleQuickAdd = (item: MenuItem) => {
     onAddItem({
       itemId: item.id,
@@ -138,7 +122,7 @@ export default function MenuBrowser({
     })
   }
 
-  // Alternating offset classes: 0=none, 1=mt-10, 2=none, 3=-mt-10, repeat
+  // Alternating offset: 0=none, 1=mt-10, 2=none, 3=-mt-10
   const offsetClass = (idx: number): string => {
     const pos = idx % 4
     if (pos === 1) return 'mt-10'
@@ -162,10 +146,7 @@ export default function MenuBrowser({
           <div className="flex items-center gap-2">
             <span
               className="material-symbols-outlined text-primary"
-              style={{
-                fontSize: 18,
-                fontVariationSettings: "'FILL' 1,'wght' 600,'GRAD' 0,'opsz' 24",
-              }}
+              style={{ fontSize: 18, fontVariationSettings: "'FILL' 1,'wght' 600,'GRAD' 0,'opsz' 24" }}
             >
               qr_code_scanner
             </span>
@@ -180,10 +161,7 @@ export default function MenuBrowser({
           >
             <span
               className="material-symbols-outlined text-primary"
-              style={{
-                fontSize: 22,
-                fontVariationSettings: "'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24",
-              }}
+              style={{ fontSize: 22, fontVariationSettings: "'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24" }}
             >
               shopping_bag
             </span>
@@ -220,7 +198,6 @@ export default function MenuBrowser({
       <main className="px-5 mt-7 space-y-12">
         {visibleCategories.map((cat) => (
           <section key={cat.id} id={`cat-${cat.id}`}>
-            {/* Editorial section header */}
             <div className="mb-6">
               <p className="font-heading text-[10px] uppercase tracking-[0.22em] text-on-surface-variant mb-1.5 font-semibold">
                 Ons aanbod
@@ -230,7 +207,6 @@ export default function MenuBrowser({
               </h2>
             </div>
 
-            {/* Alternating offset grid */}
             <div className="grid grid-cols-2 gap-5">
               {cat.items.map((item, idx) => (
                 <MenuCard
@@ -246,7 +222,7 @@ export default function MenuBrowser({
         ))}
       </main>
 
-      {/* Cart FAB — bottom right, pill shape */}
+      {/* Cart FAB */}
       {cartItemCount > 0 && (
         <div className="fixed bottom-6 right-5 z-40">
           <button
@@ -256,10 +232,7 @@ export default function MenuBrowser({
             <div className="relative">
               <span
                 className="material-symbols-outlined text-white"
-                style={{
-                  fontSize: 22,
-                  fontVariationSettings: "'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24",
-                }}
+                style={{ fontSize: 22, fontVariationSettings: "'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24" }}
               >
                 shopping_cart
               </span>
@@ -275,7 +248,6 @@ export default function MenuBrowser({
         </div>
       )}
 
-      {/* Variant sheet */}
       {selectedItem && (
         <VariantSheet
           item={selectedItem}

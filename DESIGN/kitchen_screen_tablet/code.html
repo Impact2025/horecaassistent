@@ -1,301 +1,364 @@
 <!DOCTYPE html>
-
-<html class="dark" lang="en"><head>
+<html class="dark" lang="nl">
+<head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;family=Inter:wght@300..700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-25..200&display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "background": "#0a0c0b", // Custom dark background for Bloomberg feel
-                        "secondary-fixed": "#d6e7db",
-                        "surface-container": "#1b1c1a",
-                        "on-secondary-fixed-variant": "#3b4a42",
-                        "inverse-on-surface": "#f2f0ed",
-                        "secondary-container": "#111e17",
-                        "on-surface-variant": "#c0c9c1",
-                        "on-background": "#fbf9f6",
-                        "outline-variant": "#404943",
-                        "surface": "#0a0c0b",
-                        "surface-bright": "#1b1c1a",
-                        "on-primary-fixed": "#002114",
-                        "on-surface": "#fbf9f6",
-                        "on-tertiary-fixed": "#351000",
-                        "primary-container": "#0f4c35",
-                        "on-error": "#ffffff",
-                        "on-secondary": "#ffffff",
-                        "surface-dim": "#050605",
-                        "inverse-surface": "#fbf9f6",
-                        "surface-container-highest": "#30312f",
-                        "tertiary-fixed-dim": "#ffb693",
-                        "primary-fixed-dim": "#99d3b4",
-                        "inverse-primary": "#99d3b4",
-                        "secondary": "#bacabf",
-                        "surface-variant": "#1b1c1a",
-                        "on-primary": "#ffffff",
-                        "on-tertiary-fixed-variant": "#7a3000",
-                        "error-container": "#93000a",
-                        "on-secondary-fixed": "#111e17",
-                        "primary-fixed": "#b4f0d0",
-                        "primary": "#82bc9e", // Brighter for dark mode legibility
-                        "outline": "#707973",
-                        "error": "#ffb4ab",
-                        "on-primary-fixed-variant": "#155039",
-                        "secondary-fixed-dim": "#bacabf",
-                        "on-tertiary": "#ffffff",
-                        "surface-container-high": "#232422",
-                        "tertiary": "#ffb693",
-                        "surface-container-lowest": "#000000",
-                        "tertiary-fixed": "#ffdbcc",
-                        "on-secondary-container": "#d6e7db",
-                        "on-error-container": "#ffdad6",
-                        "on-tertiary-container": "#ff935c",
-                        "surface-container-low": "#111211",
-                        "tertiary-container": "#732d00",
-                        "on-primary-container": "#b4f0d0",
-                        "surface-tint": "#316950"
-                    },
-                    fontFamily: {
-                        "headline": ["Manrope"],
-                        "body": ["Inter"],
-                        "label": ["Inter"]
-                    },
-                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "1.5rem", "full": "9999px"},
-                },
-            },
-        }
-    </script>
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "bg": "#0c0e0d",
+          "surface-1": "#141614",
+          "surface-2": "#1c1e1c",
+          "surface-3": "#242624",
+          "on-surface": "#f0ede8",
+          "on-surface-mid": "#a8b0a8",
+          "on-surface-dim": "#5c635c",
+          "border": "#2a2e2a",
+          "green": "#82bc9e",
+          "green-dim": "#1a3028",
+          "green-glow": "#003422",
+          "amber": "#f5c842",
+          "amber-dim": "#332800",
+          "red": "#ff7070",
+          "red-dim": "#3a1010",
+          "primary": "#82bc9e",
+          "on-primary": "#002114",
+        },
+        fontFamily: {
+          "headline": ["Manrope", "sans-serif"],
+          "body": ["Inter", "sans-serif"],
+          "label": ["Inter", "sans-serif"],
+          "mono": ["ui-monospace", "monospace"],
+        },
+        borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "1rem", "2xl": "1.5rem", "full": "9999px" },
+      },
+    },
+  }
+</script>
 <style>
-        body {
-            background-color: #0a0c0b;
-            color: #fbf9f6;
-            font-family: 'Inter', sans-serif;
-            overflow: hidden;
-        }
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #404943;
-            border-radius: 10px;
-        }
-        .glass-header {
-            backdrop-filter: blur(20px);
-            background: rgba(10, 12, 11, 0.8);
-        }
-        .bloomberg-grid {
-            background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.02) 1px, transparent 0);
-            background-size: 40px 40px;
-        }
-    </style>
-<style>
-    body {
-      min-height: max(884px, 100dvh);
-    }
-  </style>
-  </head>
-<body class="bloomberg-grid h-screen flex flex-col">
-<!-- Top Navigation (Shell) -->
-<nav class="glass-header h-20 flex items-center justify-between px-8 z-50">
-<div class="flex items-center gap-6">
-<span class="material-symbols-outlined text-primary text-3xl">qr_code_scanner</span>
-<h1 class="font-headline text-2xl font-bold tracking-tight text-on-surface">TafelAI</h1>
-<div class="h-6 w-[1px] bg-outline-variant opacity-20"></div>
-<div class="flex items-center gap-2 px-4 py-2 bg-surface-container-high rounded-full">
-<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-<span class="font-label text-sm uppercase tracking-widest text-on-surface-variant font-semibold">Live Kitchen</span>
-</div>
-</div>
-<div class="flex items-center gap-4">
-<div class="text-right mr-4">
-<p class="font-label text-xs text-on-surface-variant uppercase tracking-tighter">Kitchen Clock</p>
-<p class="font-headline text-xl font-medium text-primary">19:42:08</p>
-</div>
-<button class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center text-on-surface">
-<span class="material-symbols-outlined">shopping_bag</span>
-</button>
-<button class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center text-on-surface">
-<span class="material-symbols-outlined">person</span>
-</button>
-</div>
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    display: inline-block; line-height: 1;
+  }
+  body { background: #0c0e0d; color: #f0ede8; -webkit-font-smoothing: antialiased; overflow: hidden; }
+  .custom-scrollbar::-webkit-scrollbar { width: 3px; }
+  .custom-scrollbar::-webkit-scrollbar-thumb { background: #2a2e2a; border-radius: 99px; }
+  .glass { backdrop-filter: blur(16px); background: rgba(12,14,13,0.85); }
+  .dot-grid { background-image: radial-gradient(circle, rgba(255,255,255,0.025) 1px, transparent 0); background-size: 32px 32px; }
+  .card-new { border-left: 3px solid #f5c842; }
+  .card-preparing { border-left: 3px solid #82bc9e; }
+  .card-ready { border-left: 3px solid #2a2e2a; }
+  .timer-urgent { color: #f5c842; }
+  .timer-critical { color: #ff7070; }
+  .timer-ok { color: #82bc9e; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spin { animation: spin 2s linear infinite; }
+</style>
+<style>body { min-height: max(884px, 100dvh); }</style>
+</head>
+<body class="font-body dot-grid h-screen flex flex-col">
+
+<!-- Header -->
+<nav class="glass border-b border-border flex-shrink-0 h-16 flex items-center justify-between px-6 z-50">
+  <div class="flex items-center gap-4">
+    <div class="flex items-center gap-2.5">
+      <span class="material-symbols-outlined text-green" style="font-size:20px;font-variation-settings:'FILL' 1,'wght' 600,'GRAD' 0,'opsz' 24;">qr_code_scanner</span>
+      <span class="font-headline font-bold text-on-surface tracking-tight">TafelAI</span>
+    </div>
+    <div class="w-px h-5 bg-border"></div>
+    <div class="flex items-center gap-2 px-3 py-1.5 bg-surface-2 rounded-full border border-border">
+      <span class="w-1.5 h-1.5 rounded-full bg-green animate-pulse"></span>
+      <span class="font-label text-[11px] uppercase tracking-widest text-on-surface-mid font-bold">Live Keuken</span>
+    </div>
+  </div>
+  <div class="flex items-center gap-5">
+    <div class="text-right">
+      <p class="font-mono text-[10px] text-on-surface-dim uppercase tracking-widest">Actieve orders</p>
+      <p class="font-headline text-lg font-bold text-green leading-none">7</p>
+    </div>
+    <div class="w-px h-8 bg-border"></div>
+    <div class="text-right">
+      <p class="font-mono text-[10px] text-on-surface-dim uppercase tracking-widest">Klok</p>
+      <p class="font-headline text-lg font-bold text-on-surface leading-none">19:42</p>
+    </div>
+    <div class="w-px h-8 bg-border"></div>
+    <div class="text-right">
+      <p class="font-mono text-[10px] text-on-surface-dim uppercase tracking-widest">Couverts</p>
+      <p class="font-headline text-lg font-bold text-on-surface leading-none">147</p>
+    </div>
+  </div>
 </nav>
-<!-- Main Kanban Canvas -->
-<main class="flex-1 flex overflow-hidden p-6 gap-6 h-full">
-<!-- COLUMN: NEW -->
-<section class="flex-1 flex flex-col min-w-0">
-<div class="mb-6 flex items-center justify-between px-2">
-<div class="flex items-baseline gap-3">
-<h2 class="font-headline text-3xl font-light text-on-surface">New</h2>
-<span class="text-tertiary font-headline text-lg">04</span>
-</div>
-<div class="h-[2px] flex-1 mx-6 bg-gradient-to-r from-tertiary/40 to-transparent"></div>
-</div>
-<div class="flex-1 overflow-y-auto custom-scrollbar space-y-6 pb-20">
-<!-- Order Card 1 -->
-<div class="bg-surface-container-high p-6 rounded-xl relative overflow-hidden">
-<div class="absolute top-0 left-0 w-1 h-full bg-tertiary"></div>
-<div class="flex justify-between items-start mb-6">
-<div>
-<span class="font-label text-[100px] leading-none font-black text-on-surface tracking-tighter block">12</span>
-<p class="font-label text-xs uppercase tracking-[0.3em] text-on-surface-variant mt-2">6 Guests • Table</p>
-</div>
-<div class="text-right">
-<span class="bg-tertiary/10 text-tertiary px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest">Priority</span>
-<p class="text-on-surface-variant text-sm mt-4 font-body">08m ago</p>
-</div>
-</div>
-<div class="space-y-4 mb-8">
-<div class="flex justify-between items-center group">
-<span class="text-on-surface font-medium text-lg flex items-center gap-2">
-<span class="w-2 h-2 rounded-full bg-primary/40"></span> 2x Dry Aged Ribeye
-                            </span>
-<span class="text-on-surface-variant font-label">Med-Rare</span>
-</div>
-<div class="flex justify-between items-center">
-<span class="text-on-surface font-medium text-lg flex items-center gap-2">
-<span class="w-2 h-2 rounded-full bg-primary/40"></span> 1x Truffle Risotto
-                            </span>
-<span class="text-tertiary font-label italic">No Cheese</span>
-</div>
-</div>
-<button class="w-full bg-tertiary text-on-tertiary py-5 rounded-full font-headline font-bold text-lg hover:brightness-110 transition-all flex items-center justify-center gap-3">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">restaurant</span> Start Cooking
-                    </button>
-</div>
-<!-- Order Card 2 -->
-<div class="bg-surface-container-low p-6 rounded-xl relative overflow-hidden">
-<div class="flex justify-between items-start mb-6">
-<div>
-<span class="font-label text-[100px] leading-none font-black text-on-surface-variant/40 tracking-tighter block">04</span>
-<p class="font-label text-xs uppercase tracking-[0.3em] text-on-surface-variant mt-2">2 Guests • Window</p>
-</div>
-<div class="text-right">
-<p class="text-on-surface-variant text-sm font-body">02m ago</p>
-</div>
-</div>
-<div class="space-y-4 mb-8">
-<div class="flex justify-between items-center">
-<span class="text-on-surface font-medium text-lg flex items-center gap-2">
-<span class="w-2 h-2 rounded-full bg-primary/40"></span> 1x Oysters Dozen
-                            </span>
-</div>
-</div>
-<button class="w-full bg-primary-container text-on-primary-container py-5 rounded-full font-headline font-bold text-lg flex items-center justify-center gap-3">
-<span class="material-symbols-outlined">play_arrow</span> Start Prep
-                    </button>
-</div>
-</div>
-</section>
-<!-- COLUMN: PREPARING -->
-<section class="flex-1 flex flex-col min-w-0">
-<div class="mb-6 flex items-center justify-between px-2">
-<div class="flex items-baseline gap-3">
-<h2 class="font-headline text-3xl font-light text-on-surface">Preparing</h2>
-<span class="text-primary font-headline text-lg">02</span>
-</div>
-<div class="h-[2px] flex-1 mx-6 bg-gradient-to-r from-primary/40 to-transparent"></div>
-</div>
-<div class="flex-1 overflow-y-auto custom-scrollbar space-y-6 pb-20">
-<!-- Active Prep Card -->
-<div class="bg-surface-container-highest p-6 rounded-xl relative overflow-hidden ring-1 ring-primary/20 shadow-2xl">
-<div class="absolute top-0 right-0 p-4">
-<div class="w-16 h-16 rounded-full border-4 border-primary/20 border-t-primary animate-spin"></div>
-</div>
-<div class="flex justify-between items-start mb-6">
-<div>
-<span class="font-label text-[100px] leading-none font-black text-primary tracking-tighter block">09</span>
-<p class="font-label text-xs uppercase tracking-[0.3em] text-primary mt-2">Chef Mario • Station 2</p>
-</div>
-</div>
-<div class="space-y-4 mb-8">
-<div class="bg-primary/5 p-4 rounded-lg">
-<div class="flex justify-between items-center mb-1">
-<span class="text-on-surface font-bold text-xl">4x Wagyu Sliders</span>
-<span class="text-primary font-bold">In Progress</span>
-</div>
-<div class="w-full bg-surface-container h-1 rounded-full overflow-hidden">
-<div class="bg-primary h-full w-[65%]"></div>
-</div>
-</div>
-<div class="flex justify-between items-center px-4">
-<span class="text-on-surface-variant font-medium text-lg">1x Caesar Salad</span>
-</div>
-</div>
-<button class="w-full bg-primary text-on-primary py-5 rounded-full font-headline font-bold text-lg shadow-lg flex items-center justify-center gap-3">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span> Mark Ready
-                    </button>
-</div>
-</div>
-</section>
-<!-- COLUMN: READY -->
-<section class="flex-1 flex flex-col min-w-0">
-<div class="mb-6 flex items-center justify-between px-2">
-<div class="flex items-baseline gap-3">
-<h2 class="font-headline text-3xl font-light text-on-surface">Ready</h2>
-<span class="text-on-surface-variant font-headline text-lg">01</span>
-</div>
-<div class="h-[2px] flex-1 mx-6 bg-gradient-to-r from-outline-variant/40 to-transparent"></div>
-</div>
-<div class="flex-1 overflow-y-auto custom-scrollbar space-y-6 pb-20">
-<!-- Ready Card -->
-<div class="bg-surface-container-low p-6 rounded-xl opacity-80 grayscale-[0.5] hover:grayscale-0 transition-all">
-<div class="flex justify-between items-start mb-6">
-<div>
-<span class="font-label text-[100px] leading-none font-black text-on-surface-variant tracking-tighter block">15</span>
-<p class="font-label text-xs uppercase tracking-[0.3em] text-on-surface-variant mt-2">Waitstaff Notified</p>
-</div>
-<div class="text-right">
-<span class="material-symbols-outlined text-primary text-4xl">notifications_active</span>
-</div>
-</div>
-<div class="space-y-2 mb-8 border-l-2 border-primary/20 pl-4">
-<p class="text-on-surface text-lg">Lobster Bisque</p>
-<p class="text-on-surface text-lg">Seared Scallops</p>
-</div>
-<button class="w-full bg-surface-container-highest text-on-surface py-5 rounded-full font-headline font-bold text-lg flex items-center justify-center gap-3">
-<span class="material-symbols-outlined">delivery_dining</span> Handed Over
-                    </button>
-</div>
-</div>
-</section>
+
+<!-- Kanban -->
+<main class="flex-1 overflow-hidden flex gap-0">
+
+  <!-- NEW -->
+  <section class="flex-1 flex flex-col min-w-0 border-r border-border">
+    <div class="flex items-center justify-between px-5 py-3.5 border-b border-border">
+      <div class="flex items-baseline gap-2.5">
+        <h2 class="font-headline text-base font-bold text-on-surface">Nieuw</h2>
+        <span class="font-mono text-sm font-bold text-amber">04</span>
+      </div>
+      <div class="h-0.5 flex-1 mx-4 bg-gradient-to-r from-amber/40 to-transparent rounded-full"></div>
+      <span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-dim">WACHT</span>
+    </div>
+    <div class="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-3">
+
+      <!-- Card 1 — Priority -->
+      <div class="bg-surface-2 rounded-xl card-new overflow-hidden">
+        <div class="px-5 pt-4 pb-5">
+          <div class="flex items-start justify-between mb-3">
+            <div>
+              <div class="flex items-baseline gap-2">
+                <span class="font-headline text-4xl font-black text-on-surface tracking-tight leading-none">12</span>
+                <span class="text-[11px] font-bold text-amber px-2 py-0.5 bg-amber-dim rounded-full uppercase tracking-wide">Prioriteit</span>
+              </div>
+              <p class="text-[11px] text-on-surface-mid mt-1 font-medium">6 gasten &middot; Terras</p>
+            </div>
+            <div class="text-right">
+              <p class="font-mono text-sm font-bold timer-critical">08:24</p>
+              <p class="text-[10px] text-on-surface-dim mt-0.5">geleden</p>
+            </div>
+          </div>
+          <div class="space-y-2 mb-4 pt-3 border-t border-border">
+            <div class="flex items-center justify-between">
+              <span class="flex items-center gap-2 text-sm text-on-surface font-medium">
+                <span class="w-1.5 h-1.5 rounded-full bg-green/50 flex-shrink-0"></span>
+                2× Dry Aged Ribeye
+              </span>
+              <span class="text-[11px] text-amber font-medium">Med-Rare</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="flex items-center gap-2 text-sm text-on-surface font-medium">
+                <span class="w-1.5 h-1.5 rounded-full bg-green/50 flex-shrink-0"></span>
+                1× Truffle Risotto
+              </span>
+              <span class="text-[11px] text-amber font-medium italic">Geen kaas</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="flex items-center gap-2 text-sm text-on-surface font-medium">
+                <span class="w-1.5 h-1.5 rounded-full bg-green/50 flex-shrink-0"></span>
+                3× House Salad
+              </span>
+            </div>
+          </div>
+          <button class="w-full bg-amber text-amber-dim py-3.5 rounded-xl font-headline font-bold text-sm flex items-center justify-center gap-2 hover:brightness-110 transition-all">
+            <span class="material-symbols-outlined" style="font-size:18px;font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">restaurant</span>
+            Begin met koken
+          </button>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="bg-surface-1 rounded-xl card-new overflow-hidden">
+        <div class="px-5 pt-4 pb-5">
+          <div class="flex items-start justify-between mb-3">
+            <div>
+              <span class="font-headline text-4xl font-black text-on-surface-mid tracking-tight leading-none">04</span>
+              <p class="text-[11px] text-on-surface-mid mt-1 font-medium">2 gasten &middot; Raam</p>
+            </div>
+            <div class="text-right">
+              <p class="font-mono text-sm font-bold timer-ok">02:11</p>
+              <p class="text-[10px] text-on-surface-dim mt-0.5">geleden</p>
+            </div>
+          </div>
+          <div class="space-y-2 mb-4 pt-3 border-t border-border">
+            <span class="flex items-center gap-2 text-sm text-on-surface font-medium">
+              <span class="w-1.5 h-1.5 rounded-full bg-green/50 flex-shrink-0"></span>
+              1× Dozen Oysters
+            </span>
+          </div>
+          <button class="w-full bg-green-dim text-green py-3.5 rounded-xl font-headline font-bold text-sm flex items-center justify-center gap-2 border border-green/20 hover:bg-green/10 transition-all">
+            <span class="material-symbols-outlined" style="font-size:18px;">play_arrow</span>
+            Start voorbereiden
+          </button>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="bg-surface-1 rounded-xl card-new overflow-hidden">
+        <div class="px-5 pt-4 pb-5">
+          <div class="flex items-start justify-between mb-3">
+            <div>
+              <span class="font-headline text-4xl font-black text-on-surface-mid tracking-tight leading-none">22</span>
+              <p class="text-[11px] text-on-surface-mid mt-1 font-medium">4 gasten &middot; Bar</p>
+            </div>
+            <div class="text-right">
+              <p class="font-mono text-sm font-bold timer-ok">01:05</p>
+              <p class="text-[10px] text-on-surface-dim mt-0.5">geleden</p>
+            </div>
+          </div>
+          <div class="space-y-2 mb-4 pt-3 border-t border-border">
+            <span class="flex items-center gap-2 text-sm text-on-surface font-medium">
+              <span class="w-1.5 h-1.5 rounded-full bg-green/50 flex-shrink-0"></span>
+              2× Lobster Bisque
+            </span>
+            <span class="flex items-center gap-2 text-sm text-on-surface font-medium">
+              <span class="w-1.5 h-1.5 rounded-full bg-green/50 flex-shrink-0"></span>
+              2× Caesar Salad
+            </span>
+          </div>
+          <button class="w-full bg-green-dim text-green py-3.5 rounded-xl font-headline font-bold text-sm flex items-center justify-center gap-2 border border-green/20 hover:bg-green/10 transition-all">
+            <span class="material-symbols-outlined" style="font-size:18px;">play_arrow</span>
+            Start voorbereiden
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PREPARING -->
+  <section class="flex-1 flex flex-col min-w-0 border-r border-border">
+    <div class="flex items-center justify-between px-5 py-3.5 border-b border-border">
+      <div class="flex items-baseline gap-2.5">
+        <h2 class="font-headline text-base font-bold text-on-surface">In bereiding</h2>
+        <span class="font-mono text-sm font-bold text-green">02</span>
+      </div>
+      <div class="h-0.5 flex-1 mx-4 bg-gradient-to-r from-green/40 to-transparent rounded-full"></div>
+      <span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-dim">ACTIEF</span>
+    </div>
+    <div class="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-3">
+
+      <!-- Active Card (featured) -->
+      <div class="bg-surface-2 rounded-xl card-preparing ring-1 ring-green/20 overflow-hidden">
+        <div class="px-5 pt-4 pb-5">
+          <div class="flex items-start justify-between mb-3">
+            <div>
+              <span class="font-headline text-4xl font-black text-green tracking-tight leading-none">09</span>
+              <p class="text-[11px] text-green/70 mt-1 font-medium">Chef Mario &middot; Station 2</p>
+            </div>
+            <div class="text-right">
+              <p class="font-mono text-sm font-bold timer-urgent">12:30</p>
+              <p class="text-[10px] text-on-surface-dim mt-0.5">actief</p>
+            </div>
+          </div>
+          <div class="space-y-3 mb-4 pt-3 border-t border-border">
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="flex items-center gap-2 text-sm text-on-surface font-bold">
+                  <span class="w-1.5 h-1.5 rounded-full bg-green flex-shrink-0"></span>
+                  4× Wagyu Sliders
+                </span>
+                <span class="text-[11px] font-bold text-green">In uitvoering</span>
+              </div>
+              <div class="w-full bg-surface-3 h-1 rounded-full overflow-hidden">
+                <div class="bg-green h-full rounded-full" style="width:65%"></div>
+              </div>
+            </div>
+            <span class="flex items-center gap-2 text-sm text-on-surface-mid font-medium">
+              <span class="w-1.5 h-1.5 rounded-full bg-on-surface-dim flex-shrink-0"></span>
+              1× Caesar Salad
+            </span>
+          </div>
+          <button class="w-full bg-green text-on-primary py-3.5 rounded-xl font-headline font-bold text-sm flex items-center justify-center gap-2 hover:brightness-110 transition-all">
+            <span class="material-symbols-outlined" style="font-size:18px;font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">check_circle</span>
+            Markeer als klaar
+          </button>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="bg-surface-1 rounded-xl card-preparing overflow-hidden">
+        <div class="px-5 pt-4 pb-5">
+          <div class="flex items-start justify-between mb-3">
+            <div>
+              <span class="font-headline text-4xl font-black text-green tracking-tight leading-none">17</span>
+              <p class="text-[11px] text-green/70 mt-1 font-medium">Chef Ana &middot; Station 1</p>
+            </div>
+            <div class="text-right">
+              <p class="font-mono text-sm font-bold timer-ok">06:15</p>
+              <p class="text-[10px] text-on-surface-dim mt-0.5">actief</p>
+            </div>
+          </div>
+          <div class="space-y-2 mb-4 pt-3 border-t border-border">
+            <span class="flex items-center gap-2 text-sm text-on-surface font-medium">
+              <span class="w-1.5 h-1.5 rounded-full bg-green flex-shrink-0"></span>
+              2× Seared Scallops
+            </span>
+            <span class="flex items-center gap-2 text-sm text-on-surface font-medium">
+              <span class="w-1.5 h-1.5 rounded-full bg-green flex-shrink-0"></span>
+              1× Charcuterie Board
+            </span>
+          </div>
+          <button class="w-full bg-green text-on-primary py-3.5 rounded-xl font-headline font-bold text-sm flex items-center justify-center gap-2 hover:brightness-110 transition-all">
+            <span class="material-symbols-outlined" style="font-size:18px;font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">check_circle</span>
+            Markeer als klaar
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- READY -->
+  <section class="flex-1 flex flex-col min-w-0">
+    <div class="flex items-center justify-between px-5 py-3.5 border-b border-border">
+      <div class="flex items-baseline gap-2.5">
+        <h2 class="font-headline text-base font-bold text-on-surface-mid">Klaar</h2>
+        <span class="font-mono text-sm font-bold text-on-surface-dim">01</span>
+      </div>
+      <div class="h-0.5 flex-1 mx-4 bg-border rounded-full"></div>
+      <span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-dim">UITSERVEREN</span>
+    </div>
+    <div class="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-3">
+
+      <!-- Ready Card -->
+      <div class="bg-surface-1 rounded-xl card-ready overflow-hidden opacity-80">
+        <div class="px-5 pt-4 pb-5">
+          <div class="flex items-start justify-between mb-3">
+            <div>
+              <span class="font-headline text-4xl font-black text-on-surface-dim tracking-tight leading-none">15</span>
+              <p class="text-[11px] text-on-surface-dim mt-1 font-medium">Kelner geïnformeerd</p>
+            </div>
+            <span class="material-symbols-outlined text-green" style="font-size:24px;font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">notifications_active</span>
+          </div>
+          <div class="space-y-2 mb-4 pt-3 border-t border-border pl-3 border-l border-green/20">
+            <p class="text-sm text-on-surface-mid font-medium">1× Lobster Bisque</p>
+            <p class="text-sm text-on-surface-mid font-medium">2× Seared Scallops</p>
+          </div>
+          <button class="w-full bg-surface-3 text-on-surface-mid py-3.5 rounded-xl font-headline font-bold text-sm flex items-center justify-center gap-2 hover:bg-surface-2 transition-all border border-border">
+            <span class="material-symbols-outlined" style="font-size:18px;">delivery_dining</span>
+            Uitgeserveerd
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
 </main>
-<!-- Bottom Bar (Shell) -->
-<nav class="glass-header h-20 border-t border-outline-variant/10 flex items-center justify-around px-12">
-<div class="flex flex-col items-center gap-1 group cursor-pointer text-on-surface">
-<span class="material-symbols-outlined text-2xl">restaurant_menu</span>
-<span class="font-label text-[10px] uppercase tracking-widest font-bold">Menu</span>
-</div>
-<div class="flex flex-col items-center gap-1 group cursor-pointer text-on-surface-variant opacity-50">
-<span class="material-symbols-outlined text-2xl">receipt_long</span>
-<span class="font-label text-[10px] uppercase tracking-widest font-bold">Orders</span>
-</div>
-<div class="relative -top-10">
-<div class="w-20 h-20 rounded-full bg-tertiary shadow-2xl flex items-center justify-center text-on-tertiary ring-8 ring-background">
-<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">qr_code_2</span>
-</div>
-</div>
-<div class="flex flex-col items-center gap-1 group cursor-pointer text-on-surface-variant opacity-50">
-<span class="material-symbols-outlined text-2xl">dashboard</span>
-<span class="font-label text-[10px] uppercase tracking-widest font-bold">Admin</span>
-</div>
-<div class="flex flex-col items-center gap-1 group cursor-pointer text-on-surface-variant opacity-50">
-<span class="material-symbols-outlined text-2xl">settings</span>
-<span class="font-label text-[10px] uppercase tracking-widest font-bold">Settings</span>
-</div>
+
+<!-- Bottom Bar -->
+<nav class="glass border-t border-border h-16 flex items-center justify-around px-8 flex-shrink-0">
+  <div class="flex flex-col items-center gap-1 cursor-pointer text-on-surface">
+    <span class="material-symbols-outlined text-[20px]" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">restaurant_menu</span>
+    <span class="font-label text-[9px] uppercase tracking-widest font-bold">Menu</span>
+  </div>
+  <div class="flex flex-col items-center gap-1 cursor-pointer text-on-surface-dim">
+    <span class="material-symbols-outlined text-[20px]">receipt_long</span>
+    <span class="font-label text-[9px] uppercase tracking-widest font-bold">Orders</span>
+  </div>
+  <div class="relative -top-8">
+    <div class="w-16 h-16 rounded-full bg-amber shadow-2xl flex items-center justify-center text-amber-dim ring-8" style="ring-color:#0c0e0d;">
+      <span class="material-symbols-outlined text-[28px]" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">qr_code_2</span>
+    </div>
+  </div>
+  <div class="flex flex-col items-center gap-1 cursor-pointer text-on-surface-dim">
+    <span class="material-symbols-outlined text-[20px]">dashboard</span>
+    <span class="font-label text-[9px] uppercase tracking-widest font-bold">Admin</span>
+  </div>
+  <div class="flex flex-col items-center gap-1 cursor-pointer text-on-surface-dim">
+    <span class="material-symbols-outlined text-[20px]">settings</span>
+    <span class="font-label text-[9px] uppercase tracking-widest font-bold">Settings</span>
+  </div>
 </nav>
-<!-- Quick Action FAB (Hidden in full tablet landscape usually but provided for brand persistence) -->
-<div class="fixed bottom-24 right-8 z-50">
-<div class="w-14 h-14 rounded-full bg-primary flex items-center justify-center text-on-primary shadow-2xl">
-<span class="material-symbols-outlined">shopping_cart</span>
-</div>
-</div>
-</body></html>
+
+</body>
+</html>
