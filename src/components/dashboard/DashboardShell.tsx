@@ -224,26 +224,63 @@ export default function DashboardShell({
 
         {/* Mobile header */}
         <header
-          className="md:hidden flex items-center justify-between px-4 py-3 sticky top-0 z-10"
-          style={{ background: 'rgba(245,243,240,0.92)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(192,201,193,0.2)' }}
+          className="md:hidden sticky top-0 z-40"
+          style={{
+            background: '#003422',
+            paddingTop: 'env(safe-area-inset-top, 0px)',
+          }}
         >
-          <div className="flex items-center gap-2.5">
-            <div
-              className="w-7 h-7 rounded-lg flex items-center justify-center"
-              style={{ background: '#003422' }}
-            >
-              <span className="material-symbols-outlined text-white text-[14px]">restaurant</span>
+          <div className="flex items-center justify-between px-5 py-3">
+            {/* Left: brand + page */}
+            <div className="flex items-center gap-3 min-w-0">
+              <div
+                className="w-9 h-9 rounded-xl flex items-center justify-center flex-none"
+                style={{ background: 'rgba(180,240,208,0.15)' }}
+              >
+                <span
+                  className="material-symbols-outlined text-[18px]"
+                  style={{ color: '#b4f0d0', fontVariationSettings: "'FILL' 1" }}
+                >
+                  restaurant
+                </span>
+              </div>
+              <div className="min-w-0">
+                <p
+                  className="font-heading font-extrabold text-base leading-none truncate"
+                  style={{ color: '#ffffff' }}
+                >
+                  {pageLabel}
+                </p>
+                <p
+                  className="text-[11px] font-medium leading-none mt-0.5 truncate"
+                  style={{ color: 'rgba(180,240,208,0.6)' }}
+                >
+                  {restaurant.name}
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="font-heading font-bold text-on-surface text-sm leading-none">{pageLabel}</p>
-              <p className="text-[10px] text-on-surface-variant leading-none mt-0.5">{restaurant.name}</p>
+
+            {/* Right: notification + avatar */}
+            <div className="flex items-center gap-2">
+              <button
+                className="relative w-9 h-9 flex items-center justify-center rounded-xl transition-colors"
+                style={{ background: 'rgba(180,240,208,0.08)' }}
+              >
+                <span className="material-symbols-outlined text-[20px]" style={{ color: 'rgba(180,240,208,0.7)' }}>
+                  notifications
+                </span>
+                <span
+                  className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full border-2"
+                  style={{ background: '#4ade80', borderColor: '#003422' }}
+                />
+              </button>
+              <div
+                className="w-9 h-9 rounded-xl flex items-center justify-center text-xs font-extrabold"
+                style={{ background: 'linear-gradient(135deg, #b4f0d0 0%, #4ade80 100%)', color: '#003422' }}
+              >
+                {(userName ?? userEmail ?? '?')[0]?.toUpperCase() ?? '?'}
+              </div>
             </div>
-          </div>
-          <div
-            className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
-            style={{ background: '#0f4c35', color: '#b4f0d0' }}
-          >
-            {(userName ?? userEmail ?? '?')[0]?.toUpperCase() ?? '?'}
           </div>
         </header>
 
@@ -255,62 +292,72 @@ export default function DashboardShell({
 
       {/* Mobile bottom nav */}
       <nav
-        className="md:hidden fixed bottom-0 inset-x-0 z-30 flex items-stretch"
+        className="md:hidden fixed bottom-0 inset-x-0 z-30"
         style={{
-          background: '#003422',
+          background: 'rgba(0, 28, 18, 0.96)',
+          backdropFilter: 'blur(24px)',
+          WebkitBackdropFilter: 'blur(24px)',
+          borderTop: '1px solid rgba(180,240,208,0.08)',
           paddingBottom: 'env(safe-area-inset-bottom)',
         }}
       >
-        {BOTTOM_NAV.map((item) => {
-          const active = isActive(item.href, pathname)
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="flex flex-col items-center justify-center gap-0.5 flex-1 py-2.5 min-h-[56px]"
-            >
-              <span
-                className="flex items-center justify-center w-12 h-7 rounded-full transition-colors"
-                style={active ? { background: 'rgba(180,240,208,0.15)' } : {}}
+        <div className="flex items-center px-2 py-1">
+          {BOTTOM_NAV.map((item) => {
+            const active = isActive(item.href, pathname)
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="flex flex-col items-center justify-center gap-0.5 flex-1 py-2 min-h-[52px] relative"
               >
+                {active && (
+                  <span
+                    className="absolute top-1 left-1/2 w-8 h-8 rounded-2xl -translate-x-1/2"
+                    style={{ background: 'rgba(180,240,208,0.12)' }}
+                  />
+                )}
                 <span
-                  className="material-symbols-outlined text-[22px]"
-                  style={{ color: active ? '#b4f0d0' : '#99d3b4' }}
+                  className="material-symbols-outlined text-[22px] relative z-10 transition-all"
+                  style={{
+                    color: active ? '#b4f0d0' : 'rgba(153,211,180,0.5)',
+                    fontVariationSettings: active ? "'FILL' 1" : "'FILL' 0",
+                  }}
                 >
                   {item.icon}
                 </span>
-              </span>
-              <span
-                className="text-[10px] font-semibold"
-                style={{ color: active ? '#b4f0d0' : '#99d3b4' }}
-              >
-                {item.label}
-              </span>
-            </Link>
-          )
-        })}
-        <button
-          onClick={() => setMeerOpen(true)}
-          className="flex flex-col items-center justify-center gap-0.5 flex-1 py-2.5 min-h-[56px]"
-        >
-          <span
-            className="flex items-center justify-center w-12 h-7 rounded-full"
-            style={isMeerActive ? { background: 'rgba(180,240,208,0.15)' } : {}}
+                <span
+                  className="text-[10px] font-semibold relative z-10"
+                  style={{ color: active ? '#b4f0d0' : 'rgba(153,211,180,0.5)' }}
+                >
+                  {item.label}
+                </span>
+              </Link>
+            )
+          })}
+          <button
+            onClick={() => setMeerOpen(true)}
+            className="flex flex-col items-center justify-center gap-0.5 flex-1 py-2 min-h-[52px] relative"
           >
+            {isMeerActive && (
+              <span
+                className="absolute top-1 left-1/2 w-8 h-8 rounded-2xl -translate-x-1/2"
+                style={{ background: 'rgba(180,240,208,0.12)' }}
+              />
+            )}
             <span
-              className="material-symbols-outlined text-[22px]"
-              style={{ color: isMeerActive ? '#b4f0d0' : '#99d3b4' }}
+              className="material-symbols-outlined text-[22px] relative z-10"
+              style={{ color: isMeerActive ? '#b4f0d0' : 'rgba(153,211,180,0.5)' }}
             >
               more_horiz
             </span>
-          </span>
-          <span
-            className="text-[10px] font-semibold"
-            style={{ color: isMeerActive ? '#b4f0d0' : '#99d3b4' }}
-          >
-            Meer
-          </span>
-        </button>
+            <span
+              className="text-[10px] font-semibold relative z-10"
+              style={{ color: isMeerActive ? '#b4f0d0' : 'rgba(153,211,180,0.5)' }}
+            >
+              Meer
+            </span>
+          </button>
+        </div>
       </nav>
 
       {/* Mobile meer sheet */}

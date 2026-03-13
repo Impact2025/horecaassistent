@@ -11,19 +11,18 @@ export default function LoginPage() {
   const router = useRouter()
   const [tab, setTab] = useState<Tab>('login')
 
-  // Login state
   const [loginEmail, setLoginEmail] = useState('')
   const [loginPassword, setLoginPassword] = useState('')
   const [loginError, setLoginError] = useState('')
   const [loginLoading, setLoginLoading] = useState(false)
 
-  // Register state
   const [regName, setRegName] = useState('')
   const [regEmail, setRegEmail] = useState('')
   const [regPassword, setRegPassword] = useState('')
   const [regConfirm, setRegConfirm] = useState('')
   const [regError, setRegError] = useState('')
   const [regLoading, setRegLoading] = useState(false)
+  const [regSuccess, setRegSuccess] = useState(false)
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
@@ -62,6 +61,8 @@ export default function LoginPage() {
 
     if (result?.error) {
       setRegError(result.error)
+    } else {
+      setRegSuccess(true)
     }
   }
 
@@ -70,170 +71,276 @@ export default function LoginPage() {
   }
 
   const inputCls =
-    'w-full px-4 py-3 rounded-xl border border-outline-variant bg-white text-on-surface text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 placeholder:text-on-surface-variant/60'
-
-  const primaryBtnCls =
-    'w-full py-3 rounded-xl bg-primary text-white font-semibold text-sm hover:bg-primary/90 transition-colors disabled:opacity-60'
+    'w-full px-4 py-3.5 rounded-2xl text-sm bg-white/8 border border-white/12 text-white placeholder:text-white/40 focus:outline-none focus:border-white/30 focus:bg-white/12 transition-all'
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-[#fbf9f6] p-4">
-      <div className="w-full max-w-sm">
-        {/* Brand */}
-        <div className="text-center mb-8">
-          <h1 className="font-heading text-3xl font-bold text-primary">
-            HorecaAI
-          </h1>
-          <p className="text-on-surface-variant text-sm mt-2">
-            Restaurant management
-          </p>
+    <div
+      className="flex flex-col min-h-screen"
+      style={{
+        background: 'linear-gradient(160deg, #001f14 0%, #003422 45%, #0a4a30 100%)',
+        minHeight: '100dvh',
+      }}
+    >
+      {/* Decorative blobs */}
+      <div
+        className="pointer-events-none absolute inset-0 overflow-hidden"
+        aria-hidden
+      >
+        <div
+          className="absolute -top-32 -right-32 w-80 h-80 rounded-full opacity-20"
+          style={{ background: 'radial-gradient(circle, #4ade80, transparent)' }}
+        />
+        <div
+          className="absolute top-1/3 -left-24 w-64 h-64 rounded-full opacity-10"
+          style={{ background: 'radial-gradient(circle, #86efac, transparent)' }}
+        />
+      </div>
+
+      {/* Hero section */}
+      <div
+        className="flex flex-col items-center justify-center flex-1 px-6 pt-16 pb-8 relative z-10"
+        style={{ paddingTop: 'max(4rem, env(safe-area-inset-top, 0px) + 3rem)' }}
+      >
+        {/* Logo mark */}
+        <div
+          className="w-20 h-20 rounded-3xl flex items-center justify-center mb-6 shadow-2xl"
+          style={{
+            background: 'linear-gradient(135deg, #b4f0d0 0%, #4ade80 100%)',
+            boxShadow: '0 20px 60px rgba(74, 222, 128, 0.3)',
+          }}
+        >
+          <span
+            className="material-symbols-outlined text-4xl"
+            style={{ color: '#003422', fontVariationSettings: "'FILL' 1" }}
+          >
+            restaurant
+          </span>
         </div>
 
-        {/* Card */}
-        <div className="bg-white rounded-2xl shadow-sm border border-outline-variant overflow-hidden">
-          {/* Tabs */}
-          <div className="flex border-b border-outline-variant">
+        {/* Brand name */}
+        <h1
+          className="font-heading font-extrabold text-4xl tracking-tight text-white mb-2"
+          style={{ letterSpacing: '-0.02em' }}
+        >
+          HorecaAI
+        </h1>
+        <p className="text-sm font-medium" style={{ color: 'rgba(180,240,208,0.7)' }}>
+          Slim restaurant management
+        </p>
+
+        {/* Feature pills */}
+        <div className="flex items-center gap-2 mt-6 flex-wrap justify-center">
+          {['AI upsell', 'Realtime keuken', 'QR bestellen'].map((f) => (
+            <span
+              key={f}
+              className="text-xs font-semibold px-3 py-1.5 rounded-full"
+              style={{
+                background: 'rgba(180,240,208,0.1)',
+                border: '1px solid rgba(180,240,208,0.2)',
+                color: 'rgba(180,240,208,0.8)',
+              }}
+            >
+              {f}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Card */}
+      <div
+        className="relative z-10 w-full"
+        style={{
+          background: 'rgba(0,28,18,0.85)',
+          backdropFilter: 'blur(40px)',
+          WebkitBackdropFilter: 'blur(40px)',
+          borderTop: '1px solid rgba(180,240,208,0.12)',
+          borderRadius: '28px 28px 0 0',
+          paddingBottom: 'max(2rem, env(safe-area-inset-bottom, 0px) + 1.5rem)',
+        }}
+      >
+        {/* Drag handle */}
+        <div className="flex justify-center pt-3 pb-1">
+          <div className="w-10 h-1 rounded-full" style={{ background: 'rgba(180,240,208,0.2)' }} />
+        </div>
+
+        <div className="px-6 pt-4 pb-2 max-w-sm mx-auto w-full">
+          {/* Tab switcher */}
+          <div
+            className="flex p-1 rounded-2xl mb-6"
+            style={{ background: 'rgba(255,255,255,0.06)' }}
+          >
             {(['login', 'register'] as Tab[]).map((t) => (
               <button
                 key={t}
+                type="button"
                 onClick={() => setTab(t)}
-                className={`flex-1 py-3.5 text-sm font-medium transition-colors ${
+                className="flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all"
+                style={
                   tab === t
-                    ? 'text-primary border-b-2 border-primary'
-                    : 'text-on-surface-variant hover:text-on-surface'
-                }`}
+                    ? {
+                        background: 'rgba(180,240,208,0.15)',
+                        color: '#b4f0d0',
+                        boxShadow: '0 1px 4px rgba(0,0,0,0.2)',
+                      }
+                    : { color: 'rgba(180,240,208,0.4)' }
+                }
               >
                 {t === 'login' ? 'Inloggen' : 'Registreren'}
               </button>
             ))}
           </div>
 
-          <div className="p-6">
-            {/* Google OAuth */}
-            <button
-              type="button"
-              onClick={handleGoogleLogin}
-              className="w-full flex items-center justify-center gap-3 py-3 rounded-xl border border-outline-variant text-sm font-medium text-on-surface hover:bg-surface-container transition-colors mb-5"
-            >
-              {/* Google icon SVG */}
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                <path
-                  d="M17.64 9.205c0-.639-.057-1.252-.164-1.841H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"
-                  fill="#4285F4"
-                />
-                <path
-                  d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z"
-                  fill="#34A853"
-                />
-                <path
-                  d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"
-                  fill="#FBBC05"
-                />
-                <path
-                  d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"
-                  fill="#EA4335"
-                />
-              </svg>
-              Doorgaan met Google
-            </button>
+          {/* Google button */}
+          <button
+            type="button"
+            onClick={handleGoogleLogin}
+            className="w-full flex items-center justify-center gap-3 py-3.5 rounded-2xl text-sm font-semibold transition-all active:scale-[0.98] mb-5"
+            style={{
+              background: 'rgba(255,255,255,0.08)',
+              border: '1px solid rgba(255,255,255,0.12)',
+              color: 'white',
+            }}
+          >
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+              <path d="M17.64 9.205c0-.639-.057-1.252-.164-1.841H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4" />
+              <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853" />
+              <path d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05" />
+              <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335" />
+            </svg>
+            Doorgaan met Google
+          </button>
 
-            <div className="flex items-center gap-3 mb-5">
-              <div className="flex-1 h-px bg-outline-variant" />
-              <span className="text-xs text-on-surface-variant">of</span>
-              <div className="flex-1 h-px bg-outline-variant" />
-            </div>
-
-            {/* Login form */}
-            {tab === 'login' && (
-              <form onSubmit={handleLogin} className="space-y-4">
-                {loginError && (
-                  <div className="bg-[#fce4ec] text-[#880e4f] px-4 py-3 rounded-lg text-sm">
-                    {loginError}
-                  </div>
-                )}
-                <input
-                  type="email"
-                  value={loginEmail}
-                  onChange={(e) => setLoginEmail(e.target.value)}
-                  className={inputCls}
-                  placeholder="E-mailadres"
-                  required
-                  autoComplete="email"
-                />
-                <input
-                  type="password"
-                  value={loginPassword}
-                  onChange={(e) => setLoginPassword(e.target.value)}
-                  className={inputCls}
-                  placeholder="Wachtwoord"
-                  required
-                  autoComplete="current-password"
-                />
-                <button
-                  type="submit"
-                  disabled={loginLoading}
-                  className={primaryBtnCls}
-                >
-                  {loginLoading ? 'Bezig...' : 'Inloggen'}
-                </button>
-              </form>
-            )}
-
-            {/* Register form */}
-            {tab === 'register' && (
-              <form onSubmit={handleRegister} className="space-y-4">
-                {regError && (
-                  <div className="bg-[#fce4ec] text-[#880e4f] px-4 py-3 rounded-lg text-sm">
-                    {regError}
-                  </div>
-                )}
-                <input
-                  type="text"
-                  value={regName}
-                  onChange={(e) => setRegName(e.target.value)}
-                  className={inputCls}
-                  placeholder="Volledige naam"
-                  required
-                  autoComplete="name"
-                />
-                <input
-                  type="email"
-                  value={regEmail}
-                  onChange={(e) => setRegEmail(e.target.value)}
-                  className={inputCls}
-                  placeholder="E-mailadres"
-                  required
-                  autoComplete="email"
-                />
-                <input
-                  type="password"
-                  value={regPassword}
-                  onChange={(e) => setRegPassword(e.target.value)}
-                  className={inputCls}
-                  placeholder="Wachtwoord (min. 8 tekens)"
-                  required
-                  autoComplete="new-password"
-                />
-                <input
-                  type="password"
-                  value={regConfirm}
-                  onChange={(e) => setRegConfirm(e.target.value)}
-                  className={inputCls}
-                  placeholder="Wachtwoord bevestigen"
-                  required
-                  autoComplete="new-password"
-                />
-                <button
-                  type="submit"
-                  disabled={regLoading}
-                  className={primaryBtnCls}
-                >
-                  {regLoading ? 'Aanmaken...' : 'Account aanmaken'}
-                </button>
-              </form>
-            )}
+          {/* Divider */}
+          <div className="flex items-center gap-3 mb-5">
+            <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.08)' }} />
+            <span className="text-xs font-medium" style={{ color: 'rgba(180,240,208,0.4)' }}>of</span>
+            <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.08)' }} />
           </div>
+
+          {/* Login form */}
+          {tab === 'login' && (
+            <form onSubmit={handleLogin} className="space-y-3">
+              {loginError && (
+                <div
+                  className="px-4 py-3 rounded-2xl text-sm font-medium"
+                  style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.25)', color: '#fca5a5' }}
+                >
+                  {loginError}
+                </div>
+              )}
+              <input
+                type="email"
+                value={loginEmail}
+                onChange={(e) => setLoginEmail(e.target.value)}
+                className={inputCls}
+                placeholder="E-mailadres"
+                required
+                autoComplete="email"
+              />
+              <input
+                type="password"
+                value={loginPassword}
+                onChange={(e) => setLoginPassword(e.target.value)}
+                className={inputCls}
+                placeholder="Wachtwoord"
+                required
+                autoComplete="current-password"
+              />
+              <button
+                type="submit"
+                disabled={loginLoading}
+                className="w-full py-4 rounded-2xl font-bold text-sm transition-all active:scale-[0.98] disabled:opacity-60 mt-1"
+                style={{
+                  background: 'linear-gradient(135deg, #b4f0d0 0%, #4ade80 100%)',
+                  color: '#003422',
+                  boxShadow: loginLoading ? 'none' : '0 8px 32px rgba(74,222,128,0.25)',
+                }}
+              >
+                {loginLoading ? 'Inloggen...' : 'Inloggen →'}
+              </button>
+            </form>
+          )}
+
+          {/* Register form */}
+          {tab === 'register' && (
+            <form onSubmit={handleRegister} className="space-y-3">
+              {regSuccess ? (
+                <div
+                  className="px-4 py-4 rounded-2xl text-sm font-medium text-center"
+                  style={{ background: 'rgba(74,222,128,0.12)', border: '1px solid rgba(74,222,128,0.25)', color: '#86efac' }}
+                >
+                  <span className="text-2xl block mb-2">🎉</span>
+                  Account aangemaakt! Je kunt nu inloggen.
+                </div>
+              ) : (
+                <>
+                  {regError && (
+                    <div
+                      className="px-4 py-3 rounded-2xl text-sm font-medium"
+                      style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.25)', color: '#fca5a5' }}
+                    >
+                      {regError}
+                    </div>
+                  )}
+                  <input
+                    type="text"
+                    value={regName}
+                    onChange={(e) => setRegName(e.target.value)}
+                    className={inputCls}
+                    placeholder="Volledige naam"
+                    required
+                    autoComplete="name"
+                  />
+                  <input
+                    type="email"
+                    value={regEmail}
+                    onChange={(e) => setRegEmail(e.target.value)}
+                    className={inputCls}
+                    placeholder="E-mailadres"
+                    required
+                    autoComplete="email"
+                  />
+                  <input
+                    type="password"
+                    value={regPassword}
+                    onChange={(e) => setRegPassword(e.target.value)}
+                    className={inputCls}
+                    placeholder="Wachtwoord (min. 8 tekens)"
+                    required
+                    autoComplete="new-password"
+                  />
+                  <input
+                    type="password"
+                    value={regConfirm}
+                    onChange={(e) => setRegConfirm(e.target.value)}
+                    className={inputCls}
+                    placeholder="Wachtwoord bevestigen"
+                    required
+                    autoComplete="new-password"
+                  />
+                  <button
+                    type="submit"
+                    disabled={regLoading}
+                    className="w-full py-4 rounded-2xl font-bold text-sm transition-all active:scale-[0.98] disabled:opacity-60 mt-1"
+                    style={{
+                      background: 'linear-gradient(135deg, #b4f0d0 0%, #4ade80 100%)',
+                      color: '#003422',
+                      boxShadow: regLoading ? 'none' : '0 8px 32px rgba(74,222,128,0.25)',
+                    }}
+                  >
+                    {regLoading ? 'Account aanmaken...' : 'Account aanmaken →'}
+                  </button>
+                </>
+              )}
+            </form>
+          )}
+
+          {/* Footer */}
+          <p className="text-center text-xs mt-6" style={{ color: 'rgba(180,240,208,0.3)' }}>
+            Door in te loggen ga je akkoord met onze voorwaarden
+          </p>
         </div>
       </div>
-    </main>
+    </div>
   )
 }
