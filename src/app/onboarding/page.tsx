@@ -1,20 +1,17 @@
 import { auth } from '@/auth'
 import { redirect } from 'next/navigation'
+import OnboardingWizard from './OnboardingWizard'
 
 export default async function OnboardingPage() {
   const session = await auth()
-  if (!session) redirect('/login')
+  if (!session?.user?.id) redirect('/login')
+
+  // If user already has a restaurant, go to dashboard
+  if (session.user.restaurantId) redirect('/dashboard')
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-[#fbf9f6]">
-      <div className="text-center max-w-md">
-        <h1 className="font-heading text-3xl font-bold text-primary mb-4">
-          Welkom bij HorecaAI
-        </h1>
-        <p className="text-on-surface-variant">
-          Restaurant setup wizard komt binnenkort...
-        </p>
-      </div>
+    <main className="min-h-screen bg-[#fbf9f6] flex items-center justify-center p-4">
+      <OnboardingWizard userId={session.user.id} />
     </main>
   )
 }

@@ -3,7 +3,7 @@ import { eq } from 'drizzle-orm'
 import { getMspOrder } from '@/lib/multisafepay'
 import { pusherServer } from '@/lib/pusher'
 import { db } from '@/lib/db'
-import { orders } from '@/lib/db/schema'
+import { orders, restaurants } from '@/lib/db/schema'
 
 // MultiSafepay stuurt een POST of GET naar de notification_url
 // met transactionid als query parameter of in de body
@@ -15,31 +15,59 @@ async function handleNotification(orderId: string): Promise<NextResponse> {
   }
 
   const { status, financial_status } = mspOrder.data
+  const isPaid = status === 'completed' || financial_status === 'completed'
 
-  // 'completed' = betaald, 'initialized' / 'uncleared' = pending
-  if (status === 'completed' || financial_status === 'completed') {
-    const [updatedOrder] = await db
-      .update(orders)
-      .set({
-        status: 'confirmed',
-        paidAt: new Date(),
-        paymentMethod: 'ideal',
-        updatedAt: new Date(),
-      })
-      .where(eq(orders.id, orderId))
-      .returning()
+  if (!isPaid) {
+    return NextResponse.json({ ok: true }, { status: 200 })
+  }
 
-    if (updatedOrder) {
-      await pusherServer.trigger(`order-${orderId}`, 'order-confirmed', {
-        orderId,
-        status: 'confirmed',
-      })
+  // Handle subscription payments (order_id starts with 'sub-')
+  if (orderId.startsWith('sub-')) {
+    // Format: sub-{restaurantId}-{timestamp}
+    const parts = orderId.split('-')
+    // restaurantId is a UUID: parts[1]-[2]-[3]-[4]-[5]
+    // 'sub' is parts[0], timestamp is parts[6]
+    if (parts.length >= 7) {
+      const restaurantId = parts.slice(1, 6).join('-')
+      const thirtyDaysFromNow = new Date()
+      thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30)
 
-      await pusherServer.trigger(`restaurant-${updatedOrder.restaurantId}`, 'order-confirmed', {
-        orderId,
-        status: 'confirmed',
-      })
+      await db
+        .update(restaurants)
+        .set({
+          plan: 'pro',
+          planExpiresAt: thirtyDaysFromNow,
+          updatedAt: new Date(),
+        })
+        .where(eq(restaurants.id, restaurantId))
+        .returning()
     }
+
+    return NextResponse.json({ ok: true }, { status: 200 })
+  }
+
+  // Handle regular order payments
+  const [updatedOrder] = await db
+    .update(orders)
+    .set({
+      status: 'confirmed',
+      paidAt: new Date(),
+      paymentMethod: 'ideal',
+      updatedAt: new Date(),
+    })
+    .where(eq(orders.id, orderId))
+    .returning()
+
+  if (updatedOrder) {
+    await pusherServer.trigger(`order-${orderId}`, 'order-confirmed', {
+      orderId,
+      status: 'confirmed',
+    })
+
+    await pusherServer.trigger(`restaurant-${updatedOrder.restaurantId}`, 'order-confirmed', {
+      orderId,
+      status: 'confirmed',
+    })
   }
 
   return NextResponse.json({ ok: true }, { status: 200 })

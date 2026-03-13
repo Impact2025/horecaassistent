@@ -16,7 +16,11 @@
       "Bash(npx tsc:*)",
       "Bash(node -e \"const s = require\\('/d/apps/horecaassistent/node_modules/stripe'\\); console.log\\(Object.keys\\(s.Stripe || s\\).filter\\(k=>k.includes\\('api'\\)\\)\\)\"  2>/dev/null || grep -r \"2025-\" /d/apps/horecaassistent/node_modules/stripe/types/lib/index.d.ts 2>/dev/null | head -3)",
       "Bash(find /d/apps/horecaassistent/node_modules/stripe -name \"*.d.ts\" | head -5 && grep -l \"acacia\" /d/apps/horecaassistent/node_modules/stripe/types/*.d.ts 2>/dev/null | head -3)",
-      "Bash(ls D:/apps/horecaassistent/src/app/[slug]/ && ls D:/apps/horecaassistent/src/components/guest/ 2>/dev/null && cat D:/apps/horecaassistent/tailwind.config.ts 2>/dev/null || cat D:/apps/horecaassistent/tailwind.config.js 2>/dev/null)"
+      "Bash(ls D:/apps/horecaassistent/src/app/[slug]/ && ls D:/apps/horecaassistent/src/components/guest/ 2>/dev/null && cat D:/apps/horecaassistent/tailwind.config.ts 2>/dev/null || cat D:/apps/horecaassistent/tailwind.config.js 2>/dev/null)",
+      "Bash(cd D:/apps/horecaassistent && npm test 2>&1)",
+      "Bash(cd D:/apps/horecaassistent && npm run typecheck 2>&1)",
+      "Bash(cd D:/apps/horecaassistent && npm run lint 2>&1)",
+      "Bash(cd D:/apps/horecaassistent && npm run test 2>&1)"
     ]
   }
 }

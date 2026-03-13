@@ -10,26 +10,7 @@ import {
 } from '@/lib/db/schema'
 import type { MenuCategory, MenuItem } from '@/lib/db/schema'
 import GastFlow, { type CategoryWithItems } from '@/components/guest/GastFlow'
-
-type VideoSlot = 'ochtend' | 'lunch' | 'middag' | 'avond' | 'nacht'
-
-function getVideoSlot(date: Date, timezone: string): VideoSlot {
-  const formatter = new Intl.DateTimeFormat('nl-NL', {
-    timeZone: timezone,
-    hour: 'numeric',
-    minute: 'numeric',
-    hour12: false,
-  })
-  const parts = formatter.formatToParts(date)
-  const hourPart = parts.find((p) => p.type === 'hour')
-  const hour = parseInt(hourPart?.value ?? '12', 10)
-
-  if (hour >= 6 && hour < 11) return 'ochtend'
-  if (hour >= 11 && hour < 14) return 'lunch'
-  if (hour >= 14 && hour < 17) return 'middag'
-  if (hour >= 17 && hour < 22) return 'avond'
-  return 'nacht'
-}
+import { getVideoSlot } from '@/lib/videoSlot'
 
 type PageProps = {
   params: Promise<{ slug: string; tableId: string }>
