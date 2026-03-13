@@ -43,6 +43,8 @@ export default function KeukenClient({
 
   useEffect(() => {
     const pusher = getPusherClient()
+    if (!pusher) return
+
     const channel = pusher.subscribe(`restaurant-${restaurantId}`)
 
     channel.bind('new-order', (data: PusherNewOrderEvent) => {

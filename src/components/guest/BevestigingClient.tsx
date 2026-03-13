@@ -30,6 +30,8 @@ export default function BevestigingClient({ order, tableNumber, restaurantSlug }
 
   useEffect(() => {
     const pusher = getPusherClient()
+    if (!pusher) return
+
     const channel = pusher.subscribe(`order-${order.id}`)
 
     channel.bind('order-confirmed', () => {

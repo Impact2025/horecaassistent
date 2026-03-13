@@ -58,7 +58,7 @@ async function handleNotification(orderId: string): Promise<NextResponse> {
     .where(eq(orders.id, orderId))
     .returning()
 
-  if (updatedOrder) {
+  if (updatedOrder && pusherServer) {
     await pusherServer.trigger(`order-${orderId}`, 'order-confirmed', {
       orderId,
       status: 'confirmed',

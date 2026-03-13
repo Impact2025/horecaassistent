@@ -56,18 +56,20 @@ export async function PATCH(
   }
 
   try {
-    await Promise.all([
-      pusherServer.trigger(
-        `restaurant-${restaurantId}`,
-        'order-status-update',
-        { orderId, status: newStatus }
-      ),
-      pusherServer.trigger(
-        `order-${orderId}`,
-        'order-status-update',
-        { orderId, status: newStatus }
-      ),
-    ])
+    if (pusherServer) {
+      await Promise.all([
+        pusherServer.trigger(
+          `restaurant-${restaurantId}`,
+          'order-status-update',
+          { orderId, status: newStatus }
+        ),
+        pusherServer.trigger(
+          `order-${orderId}`,
+          'order-status-update',
+          { orderId, status: newStatus }
+        ),
+      ])
+    }
   } catch {
     // Pusher failure doesn't block the response — DB update already succeeded
   }

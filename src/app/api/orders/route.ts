@@ -98,6 +98,20 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const bevestigingUrl = `${appUrl}/${restaurant.slug}/tafel/${tableId}/bevestiging?orderId=${newOrder.id}`
   const cancelUrl = `${appUrl}/${restaurant.slug}/tafel/${tableId}`
 
+  // If no payment key configured, skip payment and go straight to bevestiging (demo/test mode)
+  if (!process.env.MULTISAFEPAY_API_KEY) {
+    await db
+      .update(orders)
+      .set({ status: 'confirmed', updatedAt: new Date() })
+      .where(eq(orders.id, newOrder.id))
+      .returning()
+
+    return NextResponse.json({
+      orderId: newOrder.id,
+      paymentUrl: bevestigingUrl,
+    })
+  }
+
   // Create MultiSafepay betaling
   let mspResponse
   try {
@@ -133,13 +147,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   // Notify kitchen via Pusher (non-critical — don't fail the order if this throws)
   try {
-    await pusherServer.trigger(`restaurant-${restaurantId}`, 'new-order', {
-      orderId: newOrder.id,
-      tableId,
-      itemCount: items.reduce((sum, i) => sum + i.qty, 0),
-      totalCents,
-      createdAt: newOrder.createdAt,
-    })
+    if (pusherServer) {
+      await pusherServer.trigger(`restaurant-${restaurantId}`, 'new-order', {
+        orderId: newOrder.id,
+        tableId,
+        itemCount: items.reduce((sum, i) => sum + i.qty, 0),
+        totalCents,
+        createdAt: newOrder.createdAt,
+      })
+    }
   } catch {
     // Pusher failure is non-critical; order + payment already succeeded
   }
