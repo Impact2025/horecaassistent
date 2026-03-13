@@ -40,8 +40,8 @@ next-env.d.ts
 # drizzle
 drizzle/
 
-# large media files
-public/*.mp4
+# large media files (videos moeten beschikbaar zijn via /public voor Vercel)
+# public/*.mp4
 public/*.mov
 public/*.avi
 
