@@ -13,6 +13,7 @@ interface TafelsBeheerProps {
 interface TafelCardProps {
   table: Table
   restaurantSlug: string
+  onPrint: (table: Table) => void
 }
 
 function Toggle({ checked, onChange, disabled }: { checked: boolean; onChange: () => void; disabled?: boolean }) {
@@ -32,7 +33,7 @@ function Toggle({ checked, onChange, disabled }: { checked: boolean; onChange: (
   )
 }
 
-function TafelCard({ table, restaurantSlug }: TafelCardProps) {
+function TafelCard({ table, restaurantSlug, onPrint }: TafelCardProps) {
   const [active, setActive] = useState(table.isActive)
   const [pending, startTransition] = useTransition()
 
@@ -59,7 +60,7 @@ function TafelCard({ table, restaurantSlug }: TafelCardProps) {
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: '1px solid rgba(192,201,193,0.2)' }}>
         <div>
-          <p className="text-[10px] uppercase tracking-widest font-semibold" style={{ color: '#99d3b4' /* use muted green */ }}>
+          <p className="text-[10px] uppercase tracking-widest font-semibold" style={{ color: '#9aaa9b' }}>
             Tafel
           </p>
           <p className="font-heading text-3xl font-extrabold leading-none" style={{ color: '#003422' }}>
@@ -92,27 +93,128 @@ function TafelCard({ table, restaurantSlug }: TafelCardProps) {
 
       {/* Actions */}
       <div className="flex gap-2 px-4 pb-4">
+        <button
+          onClick={() => onPrint(table)}
+          className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-full text-xs font-semibold transition-colors hover:brightness-95"
+          style={{ background: '#003422', color: '#fff' }}
+          title="QR-code afdrukken"
+        >
+          <span className="material-symbols-outlined text-[14px]">print</span>
+          Printen
+        </button>
         {table.qrCodeUrl && (
           <a
             href={table.qrCodeUrl}
             download={`qr-tafel-${table.tableNumber}.png`}
-            className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-full text-xs font-semibold transition-colors hover:brightness-95"
+            className="flex items-center justify-center w-9 h-9 rounded-full transition-colors hover:brightness-95 flex-none"
             style={{ background: '#efeeeb', color: '#404943' }}
+            title="Downloaden"
           >
-            <span className="material-symbols-outlined text-[14px]">download</span>
-            Download
+            <span className="material-symbols-outlined text-[16px]">download</span>
           </a>
         )}
         <a
           href={tableUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-full text-xs font-semibold transition-colors hover:brightness-95"
+          className="flex items-center justify-center w-9 h-9 rounded-full transition-colors hover:brightness-95 flex-none"
           style={{ background: '#efeeeb', color: '#404943' }}
+          title="Bekijken"
         >
-          <span className="material-symbols-outlined text-[14px]">open_in_new</span>
-          Bekijk
+          <span className="material-symbols-outlined text-[16px]">open_in_new</span>
         </a>
+      </div>
+    </div>
+  )
+}
+
+// ─── Print overlay ─────────────────────────────────────────────────────────────
+function PrintOverlay({
+  tables,
+  restaurantSlug,
+  onClose,
+}: {
+  tables: Table[]
+  restaurantSlug: string
+  onClose: () => void
+}) {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? ''
+
+  return (
+    <div className="fixed inset-0 z-50 flex flex-col" style={{ background: '#fff' }}>
+      {/* Toolbar — hidden when printing */}
+      <div
+        className="print:hidden flex items-center justify-between px-6 py-4 flex-none"
+        style={{ borderBottom: '1px solid rgba(192,201,193,0.2)', background: '#faf8f5' }}
+      >
+        <div>
+          <p className="font-heading font-bold text-on-surface">QR-codes afdrukken</p>
+          <p className="text-xs text-on-surface-variant mt-0.5">{tables.length} tafel{tables.length !== 1 ? 's' : ''}</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={onClose}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold text-on-surface-variant transition-colors hover:bg-[#efeeeb]"
+          >
+            <span className="material-symbols-outlined text-[18px]">close</span>
+            Sluiten
+          </button>
+          <button
+            onClick={() => window.print()}
+            className="flex items-center gap-1.5 px-5 py-2 rounded-full text-sm font-bold text-white transition-all hover:brightness-110"
+            style={{ background: '#003422' }}
+          >
+            <span className="material-symbols-outlined text-[18px]">print</span>
+            Afdrukken
+          </button>
+        </div>
+      </div>
+
+      {/* Print content */}
+      <div className="flex-1 overflow-auto p-8">
+        <div className="flex flex-wrap gap-8 justify-start">
+          {tables.map((t) => {
+            const url = `${appUrl}/${restaurantSlug}/tafel/${t.id}`
+            return (
+              <div
+                key={t.id}
+                className="flex flex-col items-center text-center"
+                style={{ breakInside: 'avoid', width: 200 }}
+              >
+                {t.qrCodeUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={t.qrCodeUrl}
+                    alt={`QR tafel ${t.tableNumber}`}
+                    style={{ width: 160, height: 160 }}
+                  />
+                ) : (
+                  <div
+                    style={{
+                      width: 160,
+                      height: 160,
+                      background: '#efeeeb',
+                      borderRadius: 12,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: 12,
+                      color: '#9aaa9b',
+                    }}
+                  >
+                    Geen QR
+                  </div>
+                )}
+                <p style={{ marginTop: 10, fontWeight: 800, fontSize: 20, fontFamily: 'sans-serif' }}>
+                  Tafel {t.tableNumber}
+                </p>
+                <p style={{ marginTop: 4, fontSize: 9, color: '#9aaa9b', fontFamily: 'monospace', wordBreak: 'break-all' }}>
+                  {url}
+                </p>
+              </div>
+            )
+          })}
+        </div>
       </div>
     </div>
   )
@@ -124,8 +226,17 @@ export default function TafelsBeheer({ tables, restaurantSlug }: TafelsBeheerPro
   const [tableNumber, setTableNumber] = useState('')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+  const [printTables, setPrintTables] = useState<Table[] | null>(null)
 
   const activeTables = tables.filter((t) => t.isActive).length
+
+  function handlePrint(table: Table) {
+    setPrintTables([table])
+  }
+
+  function handlePrintAll() {
+    setPrintTables(tables.filter((t) => t.isActive))
+  }
 
   async function handleAddTafel(e: React.FormEvent) {
     e.preventDefault()
@@ -142,38 +253,6 @@ export default function TafelsBeheer({ tables, restaurantSlug }: TafelsBeheerPro
     } finally {
       setSaving(false)
     }
-  }
-
-  function handlePrintAll() {
-    const activePrintTables = tables.filter((t) => t.isActive && t.qrCodeUrl)
-    if (activePrintTables.length === 0) return
-
-    const win = window.open('', '_blank')
-    if (!win) return
-
-    const items = activePrintTables
-      .map(
-        (t) => `
-        <div style="page-break-inside: avoid; display: inline-block; margin: 16px; text-align: center; font-family: sans-serif;">
-          <img src="${t.qrCodeUrl}" style="width: 200px; height: 200px;" alt="QR Tafel ${t.tableNumber}" />
-          <p style="margin-top: 8px; font-size: 18px; font-weight: bold;">Tafel ${t.tableNumber}</p>
-        </div>
-      `
-      )
-      .join('')
-
-    win.document.write(`
-      <!DOCTYPE html>
-      <html>
-        <head><title>QR-codes afdrukken</title></head>
-        <body style="background: white; padding: 24px;">
-          <h1 style="font-family: sans-serif; margin-bottom: 24px;">QR-codes — ${restaurantSlug}</h1>
-          <div>${items}</div>
-        </body>
-      </html>
-    `)
-    win.document.close()
-    win.print()
   }
 
   return (
@@ -269,25 +348,38 @@ export default function TafelsBeheer({ tables, restaurantSlug }: TafelsBeheerPro
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
           {tables.map((table) => (
-            <TafelCard key={table.id} table={table} restaurantSlug={restaurantSlug} />
+            <TafelCard
+              key={table.id}
+              table={table}
+              restaurantSlug={restaurantSlug}
+              onPrint={handlePrint}
+            />
           ))}
         </div>
       )}
 
-      {/* Mobile FAB */}
-      <button
-        onClick={() => setModalOpen(true)}
-        className="sm:hidden fixed z-20 flex items-center gap-2 pl-4 pr-5 py-3.5 rounded-full shadow-lg text-sm font-bold text-white active:scale-95 transition-transform"
-        style={{
-          background: '#003422',
-          bottom: 'calc(64px + env(safe-area-inset-bottom, 0px) + 16px)',
-          right: '1rem',
-          boxShadow: '0 8px 28px rgba(0,52,34,0.35)',
-        }}
-      >
-        <span className="material-symbols-outlined text-[20px]">add</span>
-        Tafel toevoegen
-      </button>
+      {/* Mobile FABs */}
+      <div className="sm:hidden fixed z-20 flex flex-col gap-2" style={{
+        bottom: 'calc(64px + env(safe-area-inset-bottom, 0px) + 16px)',
+        right: '1rem',
+      }}>
+        <button
+          onClick={handlePrintAll}
+          className="flex items-center gap-2 pl-4 pr-5 py-3 rounded-full shadow-lg text-sm font-bold active:scale-95 transition-transform"
+          style={{ background: '#efeeeb', color: '#404943', boxShadow: '0 4px 16px rgba(0,0,0,0.12)' }}
+        >
+          <span className="material-symbols-outlined text-[18px]">print</span>
+          Alle printen
+        </button>
+        <button
+          onClick={() => setModalOpen(true)}
+          className="flex items-center gap-2 pl-4 pr-5 py-3.5 rounded-full shadow-lg text-sm font-bold text-white active:scale-95 transition-transform"
+          style={{ background: '#003422', boxShadow: '0 8px 28px rgba(0,52,34,0.35)' }}
+        >
+          <span className="material-symbols-outlined text-[20px]">add</span>
+          Tafel toevoegen
+        </button>
+      </div>
 
       {/* Modal */}
       {modalOpen && (
@@ -350,6 +442,15 @@ export default function TafelsBeheer({ tables, restaurantSlug }: TafelsBeheerPro
             </form>
           </div>
         </div>
+      )}
+
+      {/* Print overlay */}
+      {printTables && (
+        <PrintOverlay
+          tables={printTables}
+          restaurantSlug={restaurantSlug}
+          onClose={() => setPrintTables(null)}
+        />
       )}
     </div>
   )

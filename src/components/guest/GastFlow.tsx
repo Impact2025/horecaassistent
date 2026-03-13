@@ -156,6 +156,7 @@ export default function GastFlow({
         cartItemCount={itemCount()}
         cartTotaalCents={totaalCents()}
         restaurantName={restaurantName}
+        tableNumber={tableNumber}
         onViewCart={handleViewCart}
       />
     )
@@ -177,7 +178,9 @@ export default function GastFlow({
       <BestellingOverzicht
         items={items}
         restaurantId={restaurantId}
+        restaurantName={restaurantName}
         tableId={tableId}
+        tableNumber={tableNumber}
         onPlaceOrder={handlePlaceOrder}
         isLoading={isPlacingOrder}
         onBackToMenu={() => setStep('menu')}
