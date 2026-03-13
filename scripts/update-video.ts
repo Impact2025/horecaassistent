@@ -16,7 +16,7 @@ async function main() {
   `
 
   console.log(`Video URL ingesteld op: ${videoUrl}`)
-  console.log(`${result.count} script(s) bijgewerkt`)
+  console.log(`${result.length} script(s) bijgewerkt`)
 }
 
 main()
