@@ -85,7 +85,7 @@ export default function BevestigingClient({ order, tableNumber, restaurantSlug }
           {steps.map((step, idx) => {
             const isCompleted = idx < stepIndex
             const isCurrent = idx === stepIndex
-            const isPending = idx > stepIndex
+            const _isPending = idx > stepIndex
 
             return (
               <div key={step.key} className="flex items-center gap-4">

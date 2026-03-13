@@ -15,7 +15,7 @@ export const ourFileRouter = {
       if (!restaurantId) throw new Error('Niet ingelogd')
       return { restaurantId }
     })
-    .onUploadComplete(async ({ metadata, file }) => {
+    .onUploadComplete(async ({ file }) => {
       return { url: file.ufsUrl }
     }),
 } satisfies FileRouter

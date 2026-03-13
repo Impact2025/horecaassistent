@@ -48,7 +48,7 @@ interface MenuItemRow {
   priceEuros: string
 }
 
-export default function OnboardingWizard({ userId: _userId }: { userId: string }) {
+export default function OnboardingWizard(_props: { userId: string }) {
   const router = useRouter()
   const [step, setStep] = useState(1)
   const [pending, startTransition] = useTransition()

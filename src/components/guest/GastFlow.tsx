@@ -28,7 +28,6 @@ export default function GastFlow({
   restaurantId,
   tableId,
   tableNumber,
-  restaurantSlug,
   categories,
 }: Props) {
   const [step, setStep] = useState<Step>('video')

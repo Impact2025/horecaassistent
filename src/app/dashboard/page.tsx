@@ -2,7 +2,7 @@ import { auth } from '@/auth'
 import { redirect } from 'next/navigation'
 import { db } from '@/lib/db'
 import { orders, tables, restaurants } from '@/lib/db/schema'
-import { eq, and, gte, isNotNull, sql, desc, inArray } from 'drizzle-orm'
+import { eq, and, gte, isNotNull, sql, desc } from 'drizzle-orm'
 import DashboardOverzicht from '@/components/dashboard/DashboardOverzicht'
 
 export const dynamic = 'force-dynamic'

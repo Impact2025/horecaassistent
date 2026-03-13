@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import type { MenuItem } from '@/lib/db/schema'
 import type { CartItem } from '@/lib/stores/cartStore'
 
@@ -74,12 +75,13 @@ export default function UpsellStap({ items, onAccept, onSkip }: Props) {
               }`}
             >
               {/* Image */}
-              <div className="aspect-video overflow-hidden bg-surface-container">
+              <div className="aspect-video overflow-hidden bg-surface-container relative">
                 {item.imageUrl ? (
-                  <img
+                  <Image
                     src={item.imageUrl}
                     alt={item.name}
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">

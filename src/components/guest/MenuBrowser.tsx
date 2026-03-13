@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import type { MenuCategory, MenuItem } from '@/lib/db/schema'
 import type { CartItem } from '@/lib/stores/cartStore'
 import VariantSheet from './VariantSheet'
@@ -66,10 +67,11 @@ function MenuCard({
     <div className={`card flex flex-col gap-2.5 cursor-pointer ${offsetClass}`} onClick={onOpen}>
       <div className="aspect-[3/4] overflow-hidden rounded-2xl bg-surface-container-low relative">
         {item.imageUrl ? (
-          <img
+          <Image
             src={item.imageUrl}
             alt={item.name}
-            className="card-img w-full h-full object-cover"
+            fill
+            className="card-img object-cover"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-surface-container">

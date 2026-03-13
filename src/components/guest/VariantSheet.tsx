@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import type { MenuItem } from '@/lib/db/schema'
 import type { CartItem } from '@/lib/stores/cartStore'
 
@@ -90,10 +91,11 @@ export default function VariantSheet({ item, onAdd, onClose }: Props) {
           {/* Hero image */}
           <div className="relative h-[38vh] w-full overflow-hidden">
             {item.imageUrl ? (
-              <img
+              <Image
                 src={item.imageUrl}
                 alt={item.name}
-                className="w-full h-full object-cover"
+                fill
+                className="object-cover"
               />
             ) : (
               <div className="w-full h-full bg-surface-container flex items-center justify-center">

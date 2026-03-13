@@ -47,11 +47,10 @@ function Toggle({ checked, onChange, disabled }: ToggleProps) {
 
 interface ItemRowProps {
   item: MenuItem
-  categories: MenuCategory[]
   onEdit: (item: MenuItem) => void
 }
 
-function ItemRow({ item, categories, onEdit }: ItemRowProps) {
+function ItemRow({ item, onEdit }: ItemRowProps) {
   const [available, setAvailable] = useState(item.isAvailable)
   const [pending, startTransition] = useTransition()
 
@@ -119,14 +118,12 @@ function ItemRow({ item, categories, onEdit }: ItemRowProps) {
 
 interface CategorySectionProps {
   category: CategoryWithItems
-  categories: MenuCategory[]
   onEdit: (item: MenuItem) => void
   onAddItem: (categoryId: string) => void
 }
 
 function CategorySection({
   category,
-  categories,
   onEdit,
   onAddItem,
 }: CategorySectionProps) {
@@ -176,7 +173,6 @@ function CategorySection({
             <ItemRow
               key={item.id}
               item={item}
-              categories={categories}
               onEdit={onEdit}
             />
           ))}
@@ -199,13 +195,10 @@ export default function MenuBeheer({
   const router = useRouter()
   const [modalOpen, setModalOpen] = useState(false)
   const [editItem, setEditItem] = useState<MenuItem | null>(null)
-  const [defaultCategoryId, setDefaultCategoryId] = useState<string>('')
+  const allCategories: MenuCategory[] = categories.map(({ items: _items, ...cat }) => cat)
 
-  const allCategories: MenuCategory[] = categories.map(({ items: _, ...cat }) => cat)
-
-  function openAddItem(categoryId = '') {
+  function openAddItem(_categoryId = '') {
     setEditItem(null)
-    setDefaultCategoryId(categoryId)
     setModalOpen(true)
   }
 
@@ -248,7 +241,6 @@ export default function MenuBeheer({
           <CategorySection
             key={cat.id}
             category={cat}
-            categories={allCategories}
             onEdit={openEditItem}
             onAddItem={openAddItem}
           />
@@ -267,7 +259,6 @@ export default function MenuBeheer({
                 <ItemRow
                   key={item.id}
                   item={item}
-                  categories={allCategories}
                   onEdit={openEditItem}
                 />
               ))}
