@@ -35,11 +35,9 @@ function MarketingPage() {
           </div>
 
           <div className="hidden md:flex items-center gap-8">
-            {['Experience', 'Features', 'Pricing'].map((item) => (
-              <a key={item} href={`#${item.toLowerCase()}`} className="text-sm font-medium transition-colors" style={{ color: '#404943' }}>
-                {item}
-              </a>
-            ))}
+            <a href="#experience" className="text-sm font-medium transition-colors" style={{ color: '#404943' }}>Experience</a>
+            <a href="#features" className="text-sm font-medium transition-colors" style={{ color: '#404943' }}>Features</a>
+            <Link href="/pricing" className="text-sm font-medium transition-colors" style={{ color: '#404943' }}>Prijzen</Link>
           </div>
 
           <div className="flex items-center gap-3">
