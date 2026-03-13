@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -la /d/apps/horecaassistent/DESIGN/*/)",
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --yes 2>&1)",
+      "Bash(npm install:*)",
+      "Bash(DATABASE_URL_UNPOOLED='postgresql://neondb_owner:npg_bRPH8k9dWZej@ep-red-surf-aluvcd0l.c-3.eu-central-1.aws.neon.tech/neondb?sslmode=require' npx drizzle-kit generate 2>&1)",
+      "Bash(DATABASE_URL_UNPOOLED='postgresql://neondb_owner:npg_bRPH8k9dWZej@ep-red-surf-aluvcd0l.c-3.eu-central-1.aws.neon.tech/neondb?sslmode=require' npx drizzle-kit migrate 2>&1)",
+      "Bash(git init:*)"
+    ]
+  }
+}

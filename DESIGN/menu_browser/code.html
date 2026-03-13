@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "background": "#fbf9f6",
+              "secondary-fixed": "#d6e7db",
+              "surface-container": "#efeeeb",
+              "on-secondary-fixed-variant": "#3b4a42",
+              "inverse-on-surface": "#f2f0ed",
+              "secondary-container": "#d6e7db",
+              "on-surface-variant": "#404943",
+              "on-background": "#1b1c1a",
+              "outline-variant": "#c0c9c1",
+              "surface": "#fbf9f6",
+              "surface-bright": "#fbf9f6",
+              "on-primary-fixed": "#002114",
+              "on-surface": "#1b1c1a",
+              "on-tertiary-fixed": "#351000",
+              "primary-container": "#0f4c35",
+              "on-error": "#ffffff",
+              "on-secondary": "#ffffff",
+              "surface-dim": "#dbdad7",
+              "inverse-surface": "#30312f",
+              "surface-container-highest": "#e4e2df",
+              "tertiary-fixed-dim": "#ffb693",
+              "primary-fixed-dim": "#99d3b4",
+              "inverse-primary": "#99d3b4",
+              "secondary": "#536259",
+              "surface-variant": "#e4e2df",
+              "on-primary": "#ffffff",
+              "on-tertiary-fixed-variant": "#7a3000",
+              "error-container": "#ffdad6",
+              "on-secondary-fixed": "#111e17",
+              "primary-fixed": "#b4f0d0",
+              "primary": "#003422",
+              "outline": "#707973",
+              "error": "#ba1a1a",
+              "on-primary-fixed-variant": "#155039",
+              "secondary-fixed-dim": "#bacabf",
+              "on-tertiary": "#ffffff",
+              "surface-container-high": "#eae8e5",
+              "tertiary": "#501d00",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-fixed": "#ffdbcc",
+              "on-secondary-container": "#59685f",
+              "on-error-container": "#93000a",
+              "on-tertiary-container": "#ff935c",
+              "surface-container-low": "#f5f3f0",
+              "tertiary-container": "#732d00",
+              "on-primary-container": "#82bc9e",
+              "surface-tint": "#316950"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .hide-scrollbar::-webkit-scrollbar { display: none; }
+      .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-nav {
+        background: rgba(251, 249, 246, 0.8);
+        backdrop-filter: blur(20px);
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body antialiased pb-32">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 glass-nav border-none">
+<div class="flex items-center justify-between px-6 py-4">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary-container" data-icon="qr_code_scanner">qr_code_scanner</span>
+<h1 class="font-headline text-xl font-extrabold tracking-tight text-primary">TafelAI</h1>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined text-primary-container" data-icon="shopping_bag">shopping_bag</span>
+</div>
+</div>
+<!-- Horizontal Scrollable Categories -->
+<div class="flex overflow-x-auto gap-3 px-6 pb-4 hide-scrollbar">
+<button class="bg-primary text-on-primary px-6 py-2 rounded-full whitespace-nowrap font-label text-sm font-semibold">Coffee</button>
+<button class="bg-surface-container-highest text-on-surface-variant px-6 py-2 rounded-full whitespace-nowrap font-label text-sm font-semibold">Tea</button>
+<button class="bg-surface-container-highest text-on-surface-variant px-6 py-2 rounded-full whitespace-nowrap font-label text-sm font-semibold">Cold drinks</button>
+<button class="bg-surface-container-highest text-on-surface-variant px-6 py-2 rounded-full whitespace-nowrap font-label text-sm font-semibold">Snacks</button>
+<button class="bg-surface-container-highest text-on-surface-variant px-6 py-2 rounded-full whitespace-nowrap font-label text-sm font-semibold">Pastries</button>
+</div>
+</header>
+<main class="px-6 mt-8">
+<!-- Editorial Header -->
+<section class="mb-10">
+<p class="font-label text-xs uppercase tracking-[0.2em] text-on-surface-variant mb-2">Curated Selection</p>
+<h2 class="font-headline text-5xl font-extrabold leading-[1.1] tracking-tight text-on-background max-w-[280px]">Morning Rituals</h2>
+</section>
+<!-- Product Grid (Asymmetric Editorial Feel) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Card 1 -->
+<div class="group flex flex-col gap-4">
+<div class="aspect-[3/4] overflow-hidden rounded-xl bg-surface-container-low">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Artisanal latte with intricate heart foam art" src="https://lh3.googleusercontent.com/aida-public/AB6AXuABqbR58O7CtG2ucmjpaQVdDHsaPuGmC65ED3Ul3f8PekyzMu90f_-UimASnV6QaJfEg5wGtCnSw41IURR9oiXIVrrBN8wBJShKBU24yKw5WZYQ3fP-Ew-VyfhU0g57tJBml6RoIcqBEYD4c7DqkwVH9XcezEyHFGp8-lkaa10i4ghE77eXDu9V18E_FPDCfIfcn_J2GZpNowE0BjRAFNw58FTbQvxhW3qnK6xGe7waoVMYjMkAXeqAb4uYD9MgH30IESrICgEejZM"/>
+</div>
+<div class="flex justify-between items-start px-1">
+<div>
+<h3 class="font-headline text-lg font-bold">Oat Milk Latte</h3>
+<p class="text-on-surface-variant text-sm mt-1">Double shot espresso, creamy oat.</p>
+</div>
+<p class="font-headline text-lg font-extrabold">€4.50</p>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group flex flex-col gap-4 md:mt-12">
+<div class="aspect-[3/4] overflow-hidden rounded-xl bg-surface-container-low">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Premium matcha green tea latte in ceramic cup" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfJR32PVNIP0AFlwTjhdiaiekpt4hTSPkrvE2Gaja8vA3YaY-hP2QE1rtcXwXnXRVqTbISX6ll8QsF6mjEbu7FWAoLxChlfDGqTU69jvp7L4QczPjcvLd9RtfLql-kvT4AtyT_Pdlix9jaiLvnALSGe0vGOspnKrM_SOjVWsJ0ae0I6wqsfD0a4-qXglpgrXgTnTeaBxVx4xK3XMmuV5lT3-DXtl9gsAMJcBNusRBAsnoLkTwWrja4Rv7z7tJIkdJgnOQ_U9vXhXw"/>
+</div>
+<div class="flex justify-between items-start px-1">
+<div>
+<h3 class="font-headline text-lg font-bold">Ceremonial Matcha</h3>
+<p class="text-on-surface-variant text-sm mt-1">Whisked Kyoto grade matcha.</p>
+</div>
+<p class="font-headline text-lg font-extrabold">€5.20</p>
+</div>
+</div>
+<!-- Chef's Note (Custom System Component) -->
+<div class="md:col-span-2 bg-secondary-container p-8 rounded-xl my-6 flex flex-col gap-2">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<p class="font-label text-xs uppercase font-bold tracking-widest text-on-secondary-fixed-variant">Chef's Recommendation</p>
+</div>
+<p class="font-headline text-2xl font-semibold italic text-primary leading-tight">
+                    "The Ethiopian Yirgacheffe pairs beautifully with our house-made almond croissants this morning."
+                </p>
+</div>
+<!-- Card 3 -->
+<div class="group flex flex-col gap-4">
+<div class="aspect-[3/4] overflow-hidden rounded-xl bg-surface-container-low">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Freshly brewed black pour over coffee in glass server" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnU3aQQ6h1Qcnr0AKpf0ikDwzUX14Z6hOt09-UC1Vqw-MfbOsPO7sL_DEW49IWA6PFtFd9mM-WUUl4DyJXYsfyIxR-23nIFQz-SIa64eIBy9VcHFUfaoet3i9REpqcSZY5pjLirzWTa1YQmzUR1VcMVuLB5qlJdMirmGg7Ugp269SBtRVXG3Wk8TmXQMNxfbMWtxXAB6GrQyRfdrl9_czWNpk_gBZhqHzwb1iMfHp2HGwMk2grIzdf6Z7nGsE9cBqQ5ltnO91Y25Q"/>
+</div>
+<div class="flex justify-between items-start px-1">
+<div>
+<h3 class="font-headline text-lg font-bold">V60 Pour Over</h3>
+<p class="text-on-surface-variant text-sm mt-1">Single origin seasonal bean.</p>
+</div>
+<p class="font-headline text-lg font-extrabold">€4.80</p>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="group flex flex-col gap-4 md:-mt-12">
+<div class="aspect-[3/4] overflow-hidden rounded-xl bg-surface-container-low">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Double espresso with golden crema in porcelain cup" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0FnxiaipNq7YLCTyxz4T6dHt_-3bRJNlXoQrDHy9fQIv38PnlwvPencf0TwFc7NWdA5AQX-_0KkAk2Gjc8tvahqOA6wH9TvzpnpSa6iPONrk8RBgrz3HyC3RAAqWJ9k54tAEGmUWUAdiSsAw996D-Ms48bdvj2D3dQtTso62rci8RAt7P9eXGCsvzyfFdhTYkl_ILzyEzZ1V2anrIiz5Uzxu8Yav2m7nFQYUOn7ILBHOInkXO-4m4dQt16Qmtg5HMZmkww9kePKE"/>
+</div>
+<div class="flex justify-between items-start px-1">
+<div>
+<h3 class="font-headline text-lg font-bold">Double Espresso</h3>
+<p class="text-on-surface-variant text-sm mt-1">Rich, nutty, and vibrant.</p>
+</div>
+<p class="font-headline text-lg font-extrabold">€3.10</p>
+</div>
+</div>
+</div>
+</main>
+<!-- FAB: Floating Cart -->
+<div class="fixed bottom-24 right-6 z-40">
+<button class="bg-tertiary text-on-tertiary h-16 px-6 rounded-full flex items-center gap-4 shadow-2xl active:scale-95 transition-transform duration-200">
+<div class="relative">
+<span class="material-symbols-outlined text-2xl" data-icon="shopping_cart">shopping_cart</span>
+<span class="absolute -top-2 -right-2 bg-on-tertiary text-tertiary text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">2</span>
+</div>
+<div class="h-6 w-[1px] bg-on-tertiary/20"></div>
+<span class="font-headline font-extrabold text-lg">€7.60</span>
+</button>
+</div>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 right-0 glass-nav z-50 px-6 py-4 flex justify-between items-center">
+<div class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-2xl" data-icon="restaurant_menu" style="font-variation-settings: 'FILL' 1;">restaurant_menu</span>
+<span class="font-label text-[10px] font-semibold tracking-wide">Menu</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-2xl" data-icon="receipt_long">receipt_long</span>
+<span class="font-label text-[10px] font-semibold tracking-wide">Orders</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-2xl" data-icon="qr_code_2">qr_code_2</span>
+<span class="font-label text-[10px] font-semibold tracking-wide">Scan</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-2xl" data-icon="person">person</span>
+<span class="font-label text-[10px] font-semibold tracking-wide">Profile</span>
+</div>
+</nav>
+<!-- NavigationDrawer (Hidden for mobile view, logic for desktop/expanded states) -->
+<aside class="hidden lg:fixed left-0 top-0 h-full w-64 bg-surface-container-low border-r border-transparent p-8 flex flex-col gap-8">
+<h2 class="font-headline text-2xl font-extrabold text-primary">TafelAI Admin</h2>
+<nav class="flex flex-col gap-4">
+<div class="flex items-center gap-4 text-primary font-bold">
+<span class="material-symbols-outlined" data-icon="dashboard" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+                Dashboard
+            </div>
+<div class="flex items-center gap-4 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+                Revenue
+            </div>
+<div class="flex items-center gap-4 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+                Menu Management
+            </div>
+<div class="flex items-center gap-4 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="table_restaurant">table_restaurant</span>
+                Tables
+            </div>
+<div class="flex items-center gap-4 text-on-surface-variant mt-auto">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                Settings
+            </div>
+</nav>
+</aside>
+</body></html>

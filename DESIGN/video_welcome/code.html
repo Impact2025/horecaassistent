@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "background": "#fbf9f6",
+            "secondary-fixed": "#d6e7db",
+            "surface-container": "#efeeeb",
+            "on-secondary-fixed-variant": "#3b4a42",
+            "inverse-on-surface": "#f2f0ed",
+            "secondary-container": "#d6e7db",
+            "on-surface-variant": "#404943",
+            "on-background": "#1b1c1a",
+            "outline-variant": "#c0c9c1",
+            "surface": "#fbf9f6",
+            "surface-bright": "#fbf9f6",
+            "on-primary-fixed": "#002114",
+            "on-surface": "#1b1c1a",
+            "on-tertiary-fixed": "#351000",
+            "primary-container": "#0f4c35",
+            "on-error": "#ffffff",
+            "on-secondary": "#ffffff",
+            "surface-dim": "#dbdad7",
+            "inverse-surface": "#30312f",
+            "surface-container-highest": "#e4e2df",
+            "tertiary-fixed-dim": "#ffb693",
+            "primary-fixed-dim": "#99d3b4",
+            "inverse-primary": "#99d3b4",
+            "secondary": "#536259",
+            "surface-variant": "#e4e2df",
+            "on-primary": "#ffffff",
+            "on-tertiary-fixed-variant": "#7a3000",
+            "error-container": "#ffdad6",
+            "on-secondary-fixed": "#111e17",
+            "primary-fixed": "#b4f0d0",
+            "primary": "#003422",
+            "outline": "#707973",
+            "error": "#ba1a1a",
+            "on-primary-fixed-variant": "#155039",
+            "secondary-fixed-dim": "#bacabf",
+            "on-tertiary": "#ffffff",
+            "surface-container-high": "#eae8e5",
+            "tertiary": "#501d00",
+            "surface-container-lowest": "#ffffff",
+            "tertiary-fixed": "#ffdbcc",
+            "on-secondary-container": "#59685f",
+            "on-error-container": "#93000a",
+            "on-tertiary-container": "#ff935c",
+            "surface-container-low": "#f5f3f0",
+            "tertiary-container": "#732d00",
+            "on-primary-container": "#82bc9e",
+            "surface-tint": "#316950"
+          },
+          fontFamily: {
+            "headline": ["Manrope"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          },
+          borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "1.5rem", "full": "9999px"},
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+    .video-overlay-scrim {
+      background: linear-gradient(to bottom, rgba(0, 52, 34, 0.4) 0%, rgba(0, 52, 34, 0.8) 100%);
+    }
+    .blur-glass {
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body overflow-hidden">
+<!-- Main Video Container -->
+<div class="relative h-screen w-full flex flex-col items-center justify-center overflow-hidden">
+<!-- Video Background Emulation -->
+<div class="absolute inset-0 z-0">
+<img class="h-full w-full object-cover" data-alt="Cinematic slow-motion shot of a fine dining chef plating a dish" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCScA2Lzi0w4rIV-mcB3WMa9oUxSoXgYU13oaIzLbxLvVD5GfeIkXz_eGWinleAclDD4IvtgbTiYmKVrhAlJ5T9CC_bqI17jOtcqUhbf0CryPZoV3-YiPvQIyEjud2CjJhJxXuIa34CaZjxOWJ8OD1LCSf6c-89yb0iJ84kfxsc1IxiArZKHkSSY84srLbPRdDotAz3JhuWKiUce6KsQCMFORVp2PmZ-dw6wUaiI8qB0xyqzGvKIILqp1wMfcsCwLqX2gGJsUZJJ6o"/>
+<div class="absolute inset-0 video-overlay-scrim z-10"></div>
+</div>
+<!-- Top Branding (Minimal) -->
+<div class="absolute top-12 z-20 flex flex-col items-center space-y-2">
+<div class="p-4 rounded-full bg-surface-container-lowest/10 blur-glass border border-white/10">
+<span class="material-symbols-outlined text-white text-3xl">qr_code_scanner</span>
+</div>
+<p class="font-headline text-white/60 tracking-[0.2em] text-[10px] uppercase font-bold">TafelAI</p>
+</div>
+<!-- Central Avatar/Logo Identity -->
+<div class="relative z-20 flex flex-col items-center">
+<div class="w-24 h-24 rounded-full overflow-hidden border-2 border-primary-fixed/30 p-1 bg-white/5 blur-glass mb-6">
+<img class="w-full h-full object-cover rounded-full" data-alt="Profile portrait of the head chef in white uniform" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCm3L7GZIfeDQs7lBuxvUco8E-XlNNx4rPFhAyRgE0-AFieBf37ETfIL85a92jPwXRczRyeWTD4As9y2yk7om_GZc1bnJw6UJo4NQytmOmUC6q2tSSAgvD8FeUXRABb2OsUb_FIj2w17i-ERt0wa_D8e_EyS30HrjFT8gBLR3SsV60WLjncSxjvrEJTO5pFLo5DkSGb24gPwhCKUxn7Uz82RBr5JjdOULHiXEPjnvldYi8uMtQzQ1PBipLk2cZlzO9k2VcrjcJ_XDA"/>
+</div>
+<h1 class="font-headline text-display-lg text-4xl md:text-5xl text-white font-extrabold tracking-tight text-center px-8 leading-tight">
+        Welcome to the <br/>
+<span class="italic text-primary-fixed">Culinary Journey</span>
+</h1>
+</div>
+<!-- Floating Bottom Navigation Card -->
+<div class="absolute bottom-12 w-full px-6 z-30 max-w-lg">
+<div class="bg-surface-container-lowest/80 blur-glass rounded-xl p-6 shadow-2xl flex items-center justify-between">
+<div class="flex items-center space-y-1 flex-col items-start">
+<p class="font-label text-on-surface-variant text-[10px] uppercase tracking-widest font-bold">Currently At</p>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">restaurant</span>
+<span class="font-headline text-xl text-on-surface font-extrabold tracking-tight">L'Essence Paris</span>
+</div>
+</div>
+<!-- Skip Action -->
+<button class="bg-tertiary hover:opacity-90 transition-opacity px-8 py-3 rounded-full flex items-center gap-2 shadow-lg group">
+<span class="text-on-tertiary font-headline font-bold text-sm">Skip</span>
+<span class="material-symbols-outlined text-on-tertiary text-sm group-hover:translate-x-1 transition-transform">arrow_forward_ios</span>
+</button>
+</div>
+<!-- Subtle Indicator -->
+<div class="mt-6 flex justify-center gap-2">
+<div class="w-12 h-1 bg-primary-fixed rounded-full"></div>
+<div class="w-1.5 h-1 bg-white/30 rounded-full"></div>
+<div class="w-1.5 h-1 bg-white/30 rounded-full"></div>
+</div>
+</div>
+<!-- Ambient Texture Overlays -->
+<div class="absolute inset-0 pointer-events-none z-15 opacity-20" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 40px 40px;"></div>
+</div>
+<!-- Hidden Shell Context for Brand Identity Consistency -->
+<div class="hidden">
+<!-- Required strings from JSON for background parsing -->
+<span>TafelAI</span>
+<span>qr_code_scanner</span>
+<span>shopping_bag</span>
+</div>
+</body></html>

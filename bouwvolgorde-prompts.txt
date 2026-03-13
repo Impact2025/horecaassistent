@@ -1,0 +1,75 @@
+# Claude Code — bouwvolgorde HorecaAI
+# Gebruik in PowerShell: claude "<prompt hieronder>"
+# Zorg dat CLAUDE.md in de root staat vóór je begint
+
+# ═══════════════════════════════════════════════════════
+# FASE 0 — Project setup (doe dit EERST)
+# ═══════════════════════════════════════════════════════
+
+claude "Bootstrap een Next.js 15 project met de naam horeca-ai. Gebruik TypeScript strict, App Router, Tailwind CSS, en de volgende dependencies: drizzle-orm, drizzle-kit, @neondatabase/serverless, @clerk/nextjs, stripe, @stripe/stripe-js, pusher, pusher-js, zustand, uploadthing, @uploadthing/react, zod. Maak .env.local aan met alle keys uit CLAUDE.md als lege placeholders. Maak ook een drizzle.config.ts die wijst naar src/lib/db/schema.ts en DATABASE_URL_UNPOOLED gebruikt."
+
+claude "Zet de Neon + Drizzle client op in src/lib/db/index.ts. Gebruik @neondatabase/serverless met neonConfig.fetchConnectionCache = true. Exporteer een db object. Maak het Drizzle schema aan in src/lib/db/schema.ts op basis van de schema.ts die ik heb bijgevoegd. Genereer daarna de initiële migratie met drizzle-kit."
+
+# ═══════════════════════════════════════════════════════
+# FASE 1 — Gast bestelflow (het hart van het product)
+# ═══════════════════════════════════════════════════════
+
+claude "Bouw src/app/[slug]/tafel/[tableId]/page.tsx. Dit is een Server Component. Laad server-side: het restaurant op basis van slug (404 als niet bestaat of is_open=false), de tafel op basis van tableId (404 als niet bestaat of is_active=false), alle menu-items gegroepeerd per categorie (alleen is_available=true). Bepaal het tijdslot (ochtend/lunch/middag/avond/nacht) op basis van de huidige tijd in restaurant.timezone. Haal de juiste video_url op uit video_scripts tabel. Geef alles door aan een client component <GastFlow />."
+
+claude "Bouw src/components/guest/GastFlow.tsx als client component met Zustand cart-state. Stappen (als state machine): 'video' → 'menu' → 'upsell' → 'overzicht' → 'betaling' → 'bevestiging'. Begin in stap 'video'. Gebruik useCartStore (Zustand) voor: items array, addItem, removeItem, updateQty, clearCart, totaalCents. CartItem type: { itemId, name, qty, unitPriceCents, selectedVariants, note, isUpsell }."
+
+claude "Bouw src/components/guest/WelkomVideo.tsx. Props: videoUrl, restaurantName, onComplete. Renders een <video autoPlay muted playsInline> element. Na 3 seconden verschijnt een 'Overslaan →' knop rechtsonder. Als de video eindigt of de skip-knop geklikt wordt: roep onComplete() aan. Track hoeveel seconden de gast keek (voor analytics). Fallback: als videoUrl null is, toon direct een welkomstscherm met restaurantName en een 'Bekijk menu' knop."
+
+claude "Bouw src/components/guest/MenuBrowser.tsx. Props: categories (met items), onAddItem. Horizontale sticky category-tabs bovenaan. Items als cards: afbeelding (of placeholder), naam, prijs geformatteerd als €X,XX, allergeen-icoontjes. Bij klikken op item: open een bottom-sheet (VariantSheet component). VariantSheet toont varianten-groepen als radio-buttons of checkboxes, een opmerking-textarea, en een 'Voeg toe aan bestelling' knop. Rechtsonder: floating CartButton met totaalCents en aantal items."
+
+claude "Bouw src/app/api/upsell/route.ts. POST endpoint, ontvangt: { restaurantId, items: CartItem[], timestamp }. Laad de top-5 meest geconverteerde upsell-items van dit restaurant uit de orders tabel (WHERE upsell_accepted=true, GROUP BY item name, ORDER BY count DESC). Stuur naar Claude Haiku (claude-haiku-4-5-20251001) met systeem-prompt: je bent een slimme horecaassistent die 2-3 passende upsell-items aanbeveelt. Geef altijd JSON terug: { itemIds: string[] }. Return die item-IDs met volledige item-data."
+
+claude "Bouw src/components/guest/UpsellStap.tsx. Props: upsellItems, onAccept (itemIds), onSkip. Full-screen component (niet popup). Toon max 3 items als grote kaarten met foto, naam, prijs. Elk item heeft een grote 'Voeg toe' knop. 'Nee bedankt' link onderaan. Bij bevestigen: onAccept aanroepen met geselecteerde itemIds. Sla upsell_shown=true en upsell_accepted op via een server action."
+
+claude "Bouw src/app/api/orders/route.ts. POST endpoint, maakt een nieuwe order aan. Valideer input met Zod. Bereken subtotal, vat (per item het juiste vat_rate), tip en total — alles in centen. Sla op in Neon via Drizzle. Maak een Stripe PaymentIntent aan (amount=totalCents, currency='eur', payment_method_types=['ideal','card']). Stuur Pusher event 'new-order' naar channel 'restaurant-[restaurantId]'. Return de order ID + Stripe client_secret."
+
+claude "Bouw de Stripe webhook handler in src/app/api/webhooks/stripe/route.ts. Verwerk: payment_intent.succeeded → update order status naar 'confirmed', sla paidAt op. payment_intent.payment_failed → update status naar 'pending' (gast kan opnieuw proberen). Stuur na succeeded een Pusher event 'order-confirmed' naar channel 'order-[orderId]'."
+
+claude "Bouw src/app/[slug]/tafel/[tableId]/bevestiging/page.tsx. Toont: bestelcode (order ID eerste 8 chars), bestelde items, totaalbedrag. Realtime status-indicator via Pusher: subscribe op 'order-[orderId]', toon status 'Bevestigd → In bereiding → Klaar voor u'. Onderaan: grote knop 'Nieuwe ronde bestellen' die teruggaat naar de bestelflow (cart behouden in sessionStorage, 2 uur geldig)."
+
+# ═══════════════════════════════════════════════════════
+# FASE 2 — Keukenscherm PWA
+# ═══════════════════════════════════════════════════════
+
+claude "Bouw src/app/keuken/page.tsx als Clerk-beveiligde pagina (vereist rol 'keuken' of hoger). Laad alle open orders van het ingelogde restaurant (status IN pending,confirmed,preparing,ready). Subscribe via Pusher op channel 'restaurant-[restaurantId]' voor nieuwe orders en status-updates. Sla orders op in lokale React state (geen server polling)."
+
+claude "Bouw src/components/keuken/KeukenKanban.tsx. Drie kolommen: 'Nieuw', 'In bereiding', 'Klaar'. Orders als kaarten met: tafelnummer (groot, bold), tijdstip, items + varianten + opmerkingen. Grote touch-vriendelijke knop om status te updaten (één stap vooruit). Bij 'Nieuw' order: speel geluidssignaal via Web Audio API (beep). Voeg visuele flash toe aan de 'Nieuw' kolom. Item in order: tik op naam om 'Uitverkocht zetten' te triggeren."
+
+claude "Maak van /keuken een PWA. Voeg toe: src/app/manifest.ts (naam, iconen, display:standalone, theme_color). Service worker in public/sw.js die de keuken-pagina en assets cachet voor offline gebruik. Voeg <link rel='manifest'> toe aan de root layout. Test dat de app 'Voeg toe aan beginscherm' toont op iOS en Android."
+
+# ═══════════════════════════════════════════════════════
+# FASE 3 — Restaurant dashboard
+# ═══════════════════════════════════════════════════════
+
+claude "Bouw de dashboard layout in src/app/dashboard/layout.tsx. Vereist Clerk authenticatie. Laad het restaurant op basis van auth().orgId. Sidebar navigatie: Overzicht, Menu, Tafels, Avatar, Medewerkers, Instellingen, Abonnement. Responsive: sidebar op desktop, hamburger-menu op mobiel."
+
+claude "Bouw src/app/dashboard/menu/page.tsx. Toon alle menu_items gegroepeerd per categorie. Per categorie: drag-and-drop volgorde (gebruik @dnd-kit/sortable). Per item: naam, prijs, grote toggle is_available (uitverkocht/beschikbaar), edit-knop. Bovenaan: 'Item toevoegen' knop. Items laden via Server Component, mutaties via Server Actions."
+
+claude "Bouw het menu-item formulier als een modal (MenuItemForm.tsx). Velden: naam (text), beschrijving (textarea), categorie (select + 'Nieuwe categorie' optie), prijs (number input die centen berekent), BTW-tarief (9%/21%), afbeelding (UploadThing dropzone met preview), allergenen (14 checkboxes in grid), varianten-builder (dynamisch: voeg groepen toe, per groep opties met naam + prijsopslag). Valideer met Zod. Sla op via Server Action."
+
+claude "Bouw src/app/dashboard/tafels/page.tsx. Toon alle tafels als grid met tafelnummer + QR-preview. 'Tafel toevoegen' dialog: vul tafelnummer in → genereer QR-code (gebruik qrcode package, data = volledige URL naar gastflow) → sla op in DB + upload QR-afbeelding naar Vercel Blob. Knop: 'Print alle QR-codes' → genereer een print-friendly PDF met alle tafels."
+
+claude "Bouw src/app/dashboard/avatar/page.tsx. Toon de huidige HeyGen avatar met preview-video. Knoppen per tijdslot (ochtend/lunch/middag/avond): bewerk script, regenereer video. Script-editor: textarea met huidige script, bewaar-knop roept /api/heygen/render aan. Status van rendering: 'Wacht op HeyGen...', 'Klaar' of 'Mislukt'. Toon welke video's live staan (is_active=true)."
+
+claude "Bouw src/app/dashboard/page.tsx als analytics-overzicht. Toon: omzet vandaag/week/maand (uit orders tabel, WHERE paidAt NOT NULL). Gemiddelde orderwaarde. Upsell-conversieratio (upsell_accepted/upsell_shown * 100). Top 5 items (COUNT per item name in orders.items jsonb). Gebruik Server Components — geen client-side data fetching. Voeg een simpele staafgrafiek toe (native SVG, geen library vereist voor MVP)."
+
+# ═══════════════════════════════════════════════════════
+# FASE 4 — Onboarding + Stripe abonnement
+# ═══════════════════════════════════════════════════════
+
+claude "Bouw de onboarding-wizard in src/app/onboarding/page.tsx. 5 stappen: (1) naam + slug + logo + kleur, (2) eerste menu-categorie en 3 items, (3) eerste tafel aanmaken + QR genereren, (4) HeyGen avatar kiezen uit preset-lijst, (5) Stripe Connect koppelen voor betalingen. Sla voortgang op in de restaurants tabel (onboarding_completed_at). Redirect naar dashboard na stap 5."
+
+claude "Bouw de Stripe abonnements-flow. /dashboard/abonnement toont: huidig plan, verloopdatum, factuurhistorie. 'Upgrade' knop maakt een Stripe Checkout Session aan voor het Pro-abonnement (maandelijks). Verwerk webhook checkout.session.completed → update plan in restaurants tabel. Voeg plan-limiet-checks toe: Starter mag max 20 tafels aanmaken."
+
+# ═══════════════════════════════════════════════════════
+# HULP-SCRIPTS
+# ═══════════════════════════════════════════════════════
+
+claude "Maak een seed-script in src/lib/db/seed.ts. Maak aan: 1 restaurant (slug='demo', naam='Café De Bron'), 3 categorieën (Koffie, Frisdrank, Snacks), 8 menu-items met prijzen en varianten, 5 tafels, 3 video-scripts (ochtend/lunch/avond). Voeg een npm script toe: 'seed': 'tsx src/lib/db/seed.ts'"
+
+claude "Schrijf Vitest unit tests voor: (1) de upsell API logica in src/lib/upsell.ts, (2) de prijs-berekening (subtotal, vat, total) in een aparte helper, (3) de video-slot selectie op basis van tijdstip. Maak een GitHub Actions workflow .github/workflows/ci.yml die op elke PR runt: type-check (tsc --noEmit), lint (eslint), tests (vitest run)."
