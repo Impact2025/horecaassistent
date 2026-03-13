@@ -6,7 +6,13 @@
       "Bash(npm install:*)",
       "Bash(DATABASE_URL_UNPOOLED='postgresql://neondb_owner:npg_bRPH8k9dWZej@ep-red-surf-aluvcd0l.c-3.eu-central-1.aws.neon.tech/neondb?sslmode=require' npx drizzle-kit generate 2>&1)",
       "Bash(DATABASE_URL_UNPOOLED='postgresql://neondb_owner:npg_bRPH8k9dWZej@ep-red-surf-aluvcd0l.c-3.eu-central-1.aws.neon.tech/neondb?sslmode=require' npx drizzle-kit migrate 2>&1)",
-      "Bash(git init:*)"
+      "Bash(git init:*)",
+      "Bash(git remote:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(DATABASE_URL_UNPOOLED='postgresql://neondb_owner:npg_bRPH8k9dWZej@ep-red-surf-aluvcd0l.c-3.eu-central-1.aws.neon.tech/neondb?sslmode=require' npx drizzle-kit push --force 2>&1)",
+      "Bash(DATABASE_URL_UNPOOLED='postgresql://neondb_owner:npg_bRPH8k9dWZej@ep-red-surf-aluvcd0l.c-3.eu-central-1.aws.neon.tech/neondb?sslmode=require' npx tsx scripts/reset-db.ts 2>&1)",
+      "Bash(rm -rf drizzle/ && DATABASE_URL_UNPOOLED='postgresql://neondb_owner:npg_bRPH8k9dWZej@ep-red-surf-aluvcd0l.c-3.eu-central-1.aws.neon.tech/neondb?sslmode=require' npx drizzle-kit generate 2>&1)",
+      "Bash(git add:*)"
     ]
   }
 }
