@@ -1,4 +1,5 @@
 import type { Order } from '@/lib/db/schema'
+import GettingStartedChecklist from './GettingStartedChecklist'
 
 interface DailyRevenue {
   date: string
@@ -25,6 +26,9 @@ interface DashboardOverzichtProps {
   upsellConversie: number
   recenteOrders: RecentOrder[]
   omzetPerDag: DailyRevenue[]
+  hasMenuItems: boolean
+  hasTables: boolean
+  hasAvatar: boolean
 }
 
 function formatEuro(cents: number): string {
@@ -190,11 +194,21 @@ export default function DashboardOverzicht({
   upsellConversie,
   recenteOrders,
   omzetPerDag,
+  hasMenuItems,
+  hasTables,
+  hasAvatar,
 }: DashboardOverzichtProps) {
   const maxRevenue = Math.max(...omzetPerDag.map((d) => d.totalCents), 1)
 
   return (
     <div className="space-y-10 max-w-7xl">
+
+      {/* ── Getting started checklist (disappears when dismissed) ── */}
+      <GettingStartedChecklist
+        hasMenuItems={hasMenuItems}
+        hasTables={hasTables}
+        hasAvatar={hasAvatar}
+      />
 
       {/* ── Page header ── */}
       <div className="flex items-start justify-between gap-4">

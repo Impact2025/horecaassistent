@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { signOut } from 'next-auth/react'
 import { useState } from 'react'
 import type { Restaurant } from '@/lib/db/schema'
+import DashboardTour from './DashboardTour'
 
 interface NavItem {
   href: string
@@ -249,6 +250,8 @@ export default function DashboardShell({
         {/* Page content */}
         <main className="flex-1 p-6 md:p-8 pb-24 md:pb-8">{children}</main>
       </div>
+
+      <DashboardTour restaurantName={restaurant.name} />
 
       {/* Mobile bottom nav */}
       <nav

@@ -1,8 +1,8 @@
 import { auth } from '@/auth'
 import { redirect } from 'next/navigation'
 import { db } from '@/lib/db'
-import { orders, tables, restaurants } from '@/lib/db/schema'
-import { eq, and, gte, isNotNull, sql, desc } from 'drizzle-orm'
+import { orders, tables, restaurants, menuItems } from '@/lib/db/schema'
+import { eq, and, gte, isNotNull, sql, desc, count } from 'drizzle-orm'
 import DashboardOverzicht from '@/components/dashboard/DashboardOverzicht'
 
 export const dynamic = 'force-dynamic'
@@ -31,7 +31,7 @@ export default async function DashboardPage() {
   const restaurantId = session.user.restaurantId
 
   const [restaurant] = await db
-    .select({ name: restaurants.name, plan: restaurants.plan })
+    .select({ name: restaurants.name, plan: restaurants.plan, heygenAvatarId: restaurants.heygenAvatarId })
     .from(restaurants)
     .where(eq(restaurants.id, restaurantId))
     .limit(1)
@@ -150,6 +150,12 @@ export default async function DashboardPage() {
     .groupBy(sql`date(${orders.paidAt} at time zone 'Europe/Amsterdam')`)
     .orderBy(sql`date(${orders.paidAt} at time zone 'Europe/Amsterdam')`)
 
+  // Checklist data (parallel — non-blocking)
+  const [[menuCount], [tableCount]] = await Promise.all([
+    db.select({ n: count() }).from(menuItems).where(eq(menuItems.restaurantId, restaurantId)),
+    db.select({ n: count() }).from(tables).where(eq(tables.restaurantId, restaurantId)),
+  ])
+
   // Fill missing days with 0
   const omzetMap = new Map(
     omzetPerDagRows
@@ -174,6 +180,9 @@ export default async function DashboardPage() {
       upsellConversie={upsellConversie}
       recenteOrders={recenteOrders}
       omzetPerDag={omzetPerDag}
+      hasMenuItems={(menuCount?.n ?? 0) > 0}
+      hasTables={(tableCount?.n ?? 0) > 0}
+      hasAvatar={!!restaurant.heygenAvatarId}
     />
   )
 }
