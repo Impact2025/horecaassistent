@@ -94,7 +94,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'Bestelling aanmaken mislukt' }, { status: 500 })
   }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://horecaai.nl'
+  const appUrl =
+    process.env.NEXT_PUBLIC_APP_URL ??
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://horecaai.nl')
   const bevestigingUrl = `${appUrl}/${restaurant.slug}/tafel/${tableId}/bevestiging?orderId=${newOrder.id}`
   const cancelUrl = `${appUrl}/${restaurant.slug}/tafel/${tableId}`
 
