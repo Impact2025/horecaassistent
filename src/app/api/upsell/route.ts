@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import Anthropic from '@anthropic-ai/sdk'
 import { eq, and } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import { orders, menuItems } from '@/lib/db/schema'
@@ -17,11 +16,42 @@ type UpsellItemCount = {
   count: number
 }
 
-type AnthropicResponse = {
+type OpenRouterResponse = {
+  choices: Array<{
+    message: {
+      content: string
+    }
+  }>
+}
+
+type ParsedRecommendation = {
   itemIds: string[]
 }
 
-const anthropic = new Anthropic()
+async function callOpenRouter(systemPrompt: string, userMessage: string): Promise<string> {
+  const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+      'Content-Type': 'application/json',
+      'HTTP-Referer': process.env.NEXT_PUBLIC_APP_URL ?? 'https://horecaai.nl',
+      'X-Title': 'HorecaAI Upsell',
+    },
+    body: JSON.stringify({
+      model: process.env.OPENROUTER_MODEL ?? 'anthropic/claude-haiku-4-5',
+      max_tokens: 256,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userMessage },
+      ],
+    }),
+  })
+
+  if (!res.ok) throw new Error(`OpenRouter fout: ${res.status}`)
+
+  const data = (await res.json()) as OpenRouterResponse
+  return data.choices[0]?.message.content ?? ''
+}
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const body = (await request.json()) as UpsellRequestBody
@@ -43,7 +73,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ items: [] })
   }
 
-  // Get top-5 most accepted upsell items from past orders
+  // Top-5 meest geaccepteerde upsell items uit bestelhistorie
   const pastOrders = await db.query.orders.findMany({
     where: and(
       eq(orders.restaurantId, restaurantId),
@@ -69,7 +99,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     .sort((a, b) => b.count - a.count)
     .slice(0, 5)
 
-  // Build current order item names (exclude already ordered items)
+  // Filter items die al in de cart zitten
   const orderedItemIds = new Set(items.map((i) => i.itemId))
   const availableForUpsell = allMenuItems.filter((m) => !orderedItemIds.has(m.id))
 
@@ -77,9 +107,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ items: [] })
   }
 
-  const orderSummary = items
-    .map((i) => `- ${i.name} (${i.qty}x)`)
-    .join('\n')
+  const orderSummary = items.map((i) => `- ${i.name} (${i.qty}x)`).join('\n')
 
   const availableSummary = availableForUpsell
     .slice(0, 20)
@@ -91,28 +119,20 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       ? topUpsells.map((u) => `- ${u.name} (${u.count}x geaccepteerd)`).join('\n')
       : 'Nog geen upsell-data beschikbaar'
 
-  const userMessage = `Huidige bestelling:\n${orderSummary}\n\nTijdstip: ${timestamp}\n\nTop upsell items van dit restaurant:\n${topUpsellSummary}\n\nBeschikbare items voor upsell:\n${availableSummary}`
+  const systemPrompt =
+    'Je bent een slimme horecaassistent. Aanbeveel 2-3 passende upsell-items op basis van de huidige bestelling en het tijdstip. Geef ALLEEN een JSON object terug: {"itemIds": ["uuid", "uuid"]}'
+
+  const userMessage = `Huidige bestelling:\n${orderSummary}\n\nTijdstip: ${timestamp}\n\nTop upsells van dit restaurant:\n${topUpsellSummary}\n\nBeschikbare items:\n${availableSummary}`
 
   try {
-    const response = await anthropic.messages.create({
-      model: 'claude-haiku-4-5',
-      max_tokens: 256,
-      system:
-        'Je bent een slimme horecaassistent. Aanbeveel 2-3 passende upsell-items op basis van de huidige bestelling en het tijdstip. Geef ALLEEN een JSON array terug met item IDs: {"itemIds": ["uuid", "uuid"]}',
-      messages: [{ role: 'user', content: userMessage }],
-    })
+    const content = await callOpenRouter(systemPrompt, userMessage)
 
-    const textContent = response.content.find((c) => c.type === 'text')
-    if (!textContent || textContent.type !== 'text') {
-      return NextResponse.json({ items: [] })
-    }
-
-    const jsonMatch = textContent.text.match(/\{[\s\S]*\}/)
+    const jsonMatch = content.match(/\{[\s\S]*\}/)
     if (!jsonMatch) {
-      return NextResponse.json({ items: [] })
+      return NextResponse.json({ items: availableForUpsell.slice(0, 3) })
     }
 
-    const parsed = JSON.parse(jsonMatch[0]) as AnthropicResponse
+    const parsed = JSON.parse(jsonMatch[0]) as ParsedRecommendation
     const recommendedIds: string[] = Array.isArray(parsed.itemIds) ? parsed.itemIds : []
 
     const recommendedItems: MenuItem[] = recommendedIds
@@ -122,8 +142,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     return NextResponse.json({ items: recommendedItems })
   } catch {
-    // Fallback: return top 3 available items that are not in cart
-    const fallback = availableForUpsell.slice(0, 3)
-    return NextResponse.json({ items: fallback })
+    return NextResponse.json({ items: availableForUpsell.slice(0, 3) })
   }
 }

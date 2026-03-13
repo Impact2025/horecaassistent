@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { eq } from 'drizzle-orm'
 import { z } from 'zod'
 import { db } from '@/lib/db'
-import { orders } from '@/lib/db/schema'
-import { stripe } from '@/lib/stripe'
+import { orders, restaurants } from '@/lib/db/schema'
+import { createMspOrder } from '@/lib/multisafepay'
 import { pusherServer } from '@/lib/pusher'
 
 const orderSchema = z.object({
@@ -49,13 +49,24 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     videoWatchedSeconds,
   } = parsed.data
 
-  // Calculate amounts
+  // Load restaurant slug for redirect URLs
+  const [restaurant] = await db
+    .select({ slug: restaurants.slug })
+    .from(restaurants)
+    .where(eq(restaurants.id, restaurantId))
+    .limit(1)
+
+  if (!restaurant) {
+    return NextResponse.json({ error: 'Restaurant niet gevonden' }, { status: 404 })
+  }
+
+  // Calculate amounts — all in cents
   const subtotalCents = items.reduce((sum, item) => sum + item.qty * item.unitPriceCents, 0)
   const vatCents = Math.floor((subtotalCents * 0.09) / 1.09)
   const totalCents = subtotalCents + tipCents
 
   // Insert order
-  const insertedRows = await db
+  const [newOrder] = await db
     .insert(orders)
     .values({
       restaurantId,
@@ -73,31 +84,42 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     })
     .returning()
 
-  const newOrder = insertedRows[0]
   if (!newOrder) {
     return NextResponse.json({ error: 'Bestelling aanmaken mislukt' }, { status: 500 })
   }
 
-  // Create Stripe PaymentIntent
-  const paymentIntent = await stripe.paymentIntents.create({
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://horecaai.nl'
+  const bevestigingUrl = `${appUrl}/${restaurant.slug}/tafel/${tableId}/bevestiging?orderId=${newOrder.id}`
+  const cancelUrl = `${appUrl}/${restaurant.slug}/tafel/${tableId}`
+
+  // Create MultiSafepay betaling
+  const mspResponse = await createMspOrder({
+    type: 'redirect',
+    order_id: newOrder.id,
+    currency: 'EUR',
     amount: totalCents,
-    currency: 'eur',
-    payment_method_types: ['ideal', 'card'],
-    metadata: {
-      orderId: newOrder.id,
-      restaurantId,
-      tableId,
+    description: `Bestelling ${newOrder.id.slice(0, 8).toUpperCase()}`,
+    payment_options: {
+      notification_url: `${appUrl}/api/webhooks/multisafepay`,
+      redirect_url: bevestigingUrl,
+      cancel_url: cancelUrl,
+      close_window: false,
     },
+    ...(guestEmail ? { customer: { email: guestEmail } } : {}),
   })
 
-  // Update order with Stripe PaymentIntent ID
+  if (!mspResponse.success) {
+    return NextResponse.json({ error: 'Betaling aanmaken mislukt' }, { status: 500 })
+  }
+
+  // Store MSP order reference
   await db
     .update(orders)
-    .set({ stripePaymentIntentId: paymentIntent.id, updatedAt: new Date() })
+    .set({ stripePaymentIntentId: newOrder.id, updatedAt: new Date() })
     .where(eq(orders.id, newOrder.id))
     .returning()
 
-  // Send Pusher event to kitchen
+  // Notify kitchen via Pusher
   await pusherServer.trigger(`restaurant-${restaurantId}`, 'new-order', {
     orderId: newOrder.id,
     tableId,
@@ -108,6 +130,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   return NextResponse.json({
     orderId: newOrder.id,
-    clientSecret: paymentIntent.client_secret,
+    paymentUrl: mspResponse.data.payment_url,
   })
 }

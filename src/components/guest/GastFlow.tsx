@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
 import type { MenuCategory, MenuItem } from '@/lib/db/schema'
 import { useCartStore, type CartItem } from '@/lib/stores/cartStore'
 import WelkomVideo from './WelkomVideo'
@@ -30,7 +29,6 @@ export default function GastFlow({
   restaurantSlug,
   categories,
 }: Props) {
-  const router = useRouter()
   const [step, setStep] = useState<Step>('video')
   const [videoWatchedSeconds, setVideoWatchedSeconds] = useState(0)
   const [upsellItems, setUpsellItems] = useState<MenuItem[]>([])
@@ -119,11 +117,9 @@ export default function GastFlow({
           throw new Error(errorData.error ?? 'Bestelling mislukt')
         }
 
-        const data = (await res.json()) as { orderId: string; clientSecret: string }
+        const data = (await res.json()) as { orderId: string; paymentUrl: string }
         clearCart()
-        router.push(
-          `/${restaurantSlug}/tafel/${tableId}/bevestiging?orderId=${data.orderId}`
-        )
+        window.location.href = data.paymentUrl
       } catch (err) {
         setIsPlacingOrder(false)
         throw err
@@ -137,8 +133,6 @@ export default function GastFlow({
       upsellAccepted,
       videoWatchedSeconds,
       clearCart,
-      router,
-      restaurantSlug,
     ]
   )
 
