@@ -42,7 +42,7 @@ const AVATAR_COLORS = [
 function InitialsAvatar({ name, email }: { name: string | null; email: string }) {
   const letter = (name ?? email)[0]?.toUpperCase() ?? '?'
   const colorIdx = email.charCodeAt(0) % AVATAR_COLORS.length
-  const colors = AVATAR_COLORS[colorIdx] ?? AVATAR_COLORS[0]
+  const colors = AVATAR_COLORS[colorIdx] ?? { bg: '#e8f5ee', color: '#003422' }
   return (
     <div
       className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm flex-none"
