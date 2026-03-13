@@ -9,13 +9,13 @@ import { headers } from 'next/headers'
 import QRCode from 'qrcode'
 import type { Table } from '@/lib/db/schema'
 
-function getAppUrl(): string {
-  // In production use NEXT_PUBLIC_APP_URL if set, otherwise derive from request headers
+async function getAppUrl(): Promise<string> {
+  // In production use NEXT_PUBLIC_APP_URL if set and not localhost
   if (process.env.NEXT_PUBLIC_APP_URL && !process.env.NEXT_PUBLIC_APP_URL.includes('localhost')) {
     return process.env.NEXT_PUBLIC_APP_URL
   }
   try {
-    const headersList = headers()
+    const headersList = await headers()
     const host = headersList.get('host') ?? 'localhost:3000'
     const proto = headersList.get('x-forwarded-proto') ?? 'http'
     return `${proto}://${host}`
@@ -43,7 +43,7 @@ export async function addTafel(tableNumber: string): Promise<Table> {
 
   if (!tableNumber.trim()) throw new Error('Tafelnummer is verplicht')
 
-  const appUrl = getAppUrl()
+  const appUrl = await getAppUrl()
 
   // Insert first to get the ID, then generate QR with the real URL
   const [inserted] = await db
@@ -82,7 +82,7 @@ export async function regenerateQrCode(tableId: string): Promise<Table> {
   })
   if (!table) throw new Error('Tafel niet gevonden')
 
-  const appUrl = getAppUrl()
+  const appUrl = await getAppUrl()
   const fullUrl = `${appUrl}/${restaurantSlug}/tafel/${table.id}`
   const qrCodeUrl = await QRCode.toDataURL(fullUrl, {
     width: 400,
