@@ -16,6 +16,27 @@ body {
   font-family: 'Inter', sans-serif;
 }
 
+/* Login page inputs — dark semi-transparent with autofill override */
+.login-input {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+.login-input::placeholder {
+  color: rgba(255, 255, 255, 0.38);
+}
+.login-input:focus {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.30);
+}
+/* Override Chrome autofill background */
+.login-input:-webkit-autofill,
+.login-input:-webkit-autofill:hover,
+.login-input:-webkit-autofill:focus {
+  -webkit-text-fill-color: white;
+  -webkit-box-shadow: 0 0 0px 1000px rgba(0, 40, 24, 0.95) inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
 .material-symbols-outlined {
   font-variation-settings:
     'FILL' 0,

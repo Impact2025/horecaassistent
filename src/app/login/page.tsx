@@ -71,7 +71,7 @@ export default function LoginPage() {
   }
 
   const inputCls =
-    'w-full px-4 py-3.5 rounded-2xl text-sm bg-white/8 border border-white/12 text-white placeholder:text-white/40 focus:outline-none focus:border-white/30 focus:bg-white/12 transition-all'
+    'w-full px-4 py-3.5 rounded-2xl text-sm text-white focus:outline-none transition-all login-input'
 
   return (
     <div
