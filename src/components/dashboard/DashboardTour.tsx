@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 
-const TOUR_KEY = 'tafelai_tour_v1_done'
+const TOUR_KEY = 'tafelai_tour_session_done'
 
 const P = '#0F4C35'
 const A = '#C4622D'
@@ -81,7 +81,7 @@ export default function DashboardTour({ restaurantName }: DashboardTourProps) {
   const [step, setStep] = useState(0)
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && !localStorage.getItem(TOUR_KEY)) {
+    if (typeof window !== 'undefined' && !sessionStorage.getItem(TOUR_KEY)) {
       // Small delay so the dashboard content loads first
       const t = setTimeout(() => setVisible(true), 600)
       return () => clearTimeout(t)
@@ -89,7 +89,7 @@ export default function DashboardTour({ restaurantName }: DashboardTourProps) {
   }, [])
 
   function close() {
-    localStorage.setItem(TOUR_KEY, '1')
+    sessionStorage.setItem(TOUR_KEY, '1')
     setVisible(false)
   }
 
