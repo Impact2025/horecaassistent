@@ -19,6 +19,12 @@ type PageProps = {
 export default async function TafelPage({ params }: PageProps) {
   const { slug, tableId } = await params
 
+  // Validate UUID format to prevent Postgres errors
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+  if (!uuidRegex.test(tableId)) {
+    notFound()
+  }
+
   // Load restaurant by slug
   const restaurant = await db.query.restaurants.findFirst({
     where: eq(restaurants.slug, slug),
